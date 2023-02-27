@@ -1,0 +1,461 @@
+@font-face {
+  font-family: 'myfont';
+  src: url('/css/consolas.ttf') format("truetype");
+}
+
+/* 选中背景和字体颜色 */
+::selection {
+  background: rgb(86, 86, 87);
+  color: #fff;
+}
+
+::-moz-selection {
+  background: rgb(86, 86, 87);
+  color: #fff;
+}
+
+::-webkit-selection {
+  background: rgb(86, 86, 87);
+  color: #fff;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  font-family: Consolas, 'myfont';
+}
+
+input,
+select,
+textarea,
+button {
+  font-family: inherit;
+}
+
+.box {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.box.heibaibg {
+  background-color: #383838;
+  color: #e1e1e1;
+}
+
+.box.baiheibg {
+  background-color: #f5f5f5;
+  color: #1b1a1a;
+}
+
+.box.moren {
+  background-color: rgb(230 255 230);
+  color: #1b1a1a;
+}
+
+.highlight {
+  color: #000000;
+  background-color: #FFFF00;
+  font-weight: bold;
+}
+
+.highlight.active {
+  background-color: #FF9632;
+}
+
+pre {
+  position: relative;
+}
+
+pre .codeCopy {
+  display: none;
+  position: absolute;
+  top: 40px;
+  right: 10px;
+  color: #ccc;
+  font-size: 26px;
+}
+
+pre .shrink {
+  color: #ccc;
+  font-weight: bold;
+}
+
+pre .shrink:hover,
+pre .codeCopy:hover {
+  color: #3598aa;
+}
+
+pre .codeCopy:hover,
+pre code:hover+.codeCopy {
+  display: block;
+}
+
+.pageSearch {
+  display: none;
+  width: 80%;
+  max-width: 500px;
+  position: fixed;
+  top: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  flex-flow: row;
+  padding: 8px;
+  border-radius: 5px;
+  z-index: 999;
+  user-select: none;
+  border: 1px solid #fdfdfd;
+  background-color: rgba(0, 0, 0, 0.6);
+  overflow: hidden;
+}
+
+.pageSearch div {
+  margin: 0 5px;
+  color: #fff;
+}
+
+.pageSearch .hpre,
+.pageSearch .hx,
+.pageSearch .hnext {
+  text-align: center;
+  font-size: 16px;
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
+  flex: none;
+  width: 40px;
+  border-radius: 50%;
+}
+
+.pageSearch .pageSearchNum {
+  line-height: 40px;
+  flex: none;
+}
+
+.pageSearch .hinp {
+  flex: auto;
+  width: 0;
+  height: 40px;
+  border: none;
+  padding: 0 5px;
+  margin: 0;
+  outline: none;
+  border-radius: 5px;
+  background-color: transparent;
+  text-align: center;
+  font-size: 20px;
+  color: #fff;
+  background-color: rgba(255, 255, 255, 0.137);
+  -webkit-appearance: none;
+}
+
+.pageSearch .hinp:focus {
+  background-color: #f7f7f756;
+}
+
+.pageSearch .hpre:hover,
+.pageSearch .hx:hover,
+.pageSearch .hnext:hover {
+  background-color: #f7f7f756;
+  color: #df0ea0;
+  font-weight: bold;
+}
+
+.markdownbox {
+  margin: 0 auto;
+  width: 98%;
+  max-width: 1000px;
+  padding: 50px 0;
+}
+
+.markdownbox .from {
+  line-height: 50px;
+}
+
+.markdownbox .from .logo {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  float: right;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  background-color: #aaa;
+  transition: .5s;
+}
+
+.markdownbox .from .logo:hover {
+  box-shadow: 0 0 10px #000;
+  transform: rotate(360deg) scale(1.2);
+}
+
+.markdownbox .markdown {
+  box-sizing: border-box;
+  padding: 10px;
+  width: 100%;
+  font-size: 20px;
+  word-break: break-all;
+  line-height: 30px;
+  transition: .1s;
+}
+
+.markdownbox .markdown img {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+}
+
+.notebotlist {
+  position: fixed;
+  top: 70%;
+  right: -60px;
+  opacity: 0;
+  transform: translateY(-70%);
+  overflow: hidden;
+  display: flex;
+  flex-flow: column;
+  z-index: 5;
+}
+
+.notebotlist.open {
+  right: 20px;
+  opacity: 1;
+}
+
+.notebotlist div {
+  flex: none;
+  width: 40px;
+  line-height: 40px;
+  font-size: 30px;
+  color: #868686;
+  text-align: center;
+}
+
+.notebotlist .fszd,
+.notebotlist .fsjx {
+  font-size: 25px;
+}
+
+.notebotlist .showDir {
+  display: none;
+  font-size: 28px;
+}
+
+.notebotlist .totop {
+  display: none;
+  font-size: 40px;
+}
+
+.notebotlist .editnote {
+  font-size: 28px;
+}
+
+.notebotlist div:hover {
+  color: rgb(134, 236, 17);
+}
+
+body {
+  cursor: url("/img/normal.cur"), default
+}
+
+[cursor]:hover {
+  cursor: url("/img/link.cur"), pointer
+}
+
+.navwrap {
+  display: none;
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 8;
+}
+
+nav {
+  width: 80%;
+  max-width: 500px;
+  height: 100%;
+  overflow-y: auto;
+  color: #e7f1ff;
+  background-color: #6c6c6cee;
+}
+
+
+nav .dirBox {
+  margin: 0;
+  padding: 0;
+}
+
+nav .dirBox li {
+  padding: 0;
+  height: 40px;
+  line-height: 40px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  box-sizing: border-box;
+  padding: 0 10px;
+  font-size: 16px;
+}
+
+nav .dirBox li.open {
+  color: #FF9632;
+}
+
+nav .dirBox li:hover {
+  color: #2fc956;
+}
+
+.pageSearch .hpre:active,
+.pageSearch .hx:active,
+.pageSearch .hnext:active,
+nav .dirBox li:active,
+.markdownbox .from span:active,
+.notebotlist div:active {
+  transition: 0s;
+  opacity: .2;
+}
+
+
+/* 右键菜单 */
+.mtc::-webkit-scrollbar {
+  display: none;
+}
+
+.mtc .mtcitem,
+.mtc .mtcitem1,
+.mtc .mtcitem2,
+.mtc .mtcitem3,
+.mtc .mtcitem4,
+.mtc .mtcitem5,
+.mtc .mtcitem6,
+.mtc .mtcitem7,
+.mtc .mtcitem8,
+.mtc .mtcitem9,
+.mtc .mtcitem10 {
+  font-size: 18px;
+  line-height: 20px;
+  box-sizing: border-box;
+  margin: 5px;
+  padding: 5px;
+}
+
+.mtc .mtcitem:hover,
+.mtc .mtcitem1:hover,
+.mtc .mtcitem2:hover,
+.mtc .mtcitem3:hover,
+.mtc .mtcitem4:hover,
+.mtc .mtcitem5:hover,
+.mtc .mtcitem6:hover,
+.mtc .mtcitem7:hover,
+.mtc .mtcitem8:hover,
+.mtc .mtcitem9:hover,
+.mtc .mtcitem10:hover {
+  background-color: #ccc;
+  color: rgb(209, 20, 178);
+}
+
+.mtc .mtcitem:active,
+.mtc .mtcitem1:active,
+.mtc .mtcitem2:active,
+.mtc .mtcitem3:active,
+.mtc .mtcitem4:active,
+.mtc .mtcitem5:active,
+.mtc .mtcitem6:active,
+.mtc .mtcitem7:active,
+.mtc .mtcitem8:active,
+.mtc .mtcitem9:active,
+.mtc .mtcitem10:active {
+  transition: 0s;
+  opacity: .2;
+}
+
+.mtc .mtcinp,
+.mtc .mtcinp1,
+.mtc .mtcinp2,
+.mtc .mtcinp3,
+.mtc .mtcinp4,
+.mtc .mtcinp5,
+.mtc .mtcinp6,
+.mtc .mtcinp7,
+.mtc .mtcinp8,
+.mtc .mtcinp9,
+.mtc .mtcinp10 {
+  width: 90%;
+  margin: 10px auto 20px auto;
+}
+
+.mtc .mtcinp input,
+.mtc .mtcinp1 input,
+.mtc .mtcinp2 input,
+.mtc .mtcinp3 input,
+.mtc .mtcinp4 input,
+.mtc .mtcinp5 input,
+.mtc .mtcinp6 input,
+.mtc .mtcinp7 input,
+.mtc .mtcinp8 input,
+.mtc .mtcinp9 input,
+.mtc .mtcinp10 input {
+  width: 100%;
+  text-align: center;
+  border: 1px solid #ccc;
+  box-shadow: none;
+  color: #4a4949;
+  outline: none;
+  font-size: 20px;
+  box-sizing: border-box;
+  padding: 8px;
+  background-color: transparent;
+}
+
+.mtc .mtcinp input:focus,
+.mtc .mtcinp1 input:focus,
+.mtc .mtcinp2 input:focus,
+.mtc .mtcinp3 input:focus,
+.mtc .mtcinp4 input:focus,
+.mtc .mtcinp5 input:focus,
+.mtc .mtcinp6 input:focus,
+.mtc .mtcinp7 input:focus,
+.mtc .mtcinp8 input:focus,
+.mtc .mtcinp9 input:focus,
+.mtc .mtcinp10 input:focus {
+  border: 1px solid rgb(12, 12, 12);
+  background-color: #1413131e;
+}
+
+.mtc .mtcbtn {
+  display: block;
+  margin: 0 auto;
+  border: 1px solid #ccc;
+  line-height: 25px;
+  padding: 0 20px;
+}
+
+.mtc .mtcbtn:hover {
+  background-color: rgb(175, 173, 173);
+}
+
+.mtc .xzgd {
+  height: 30px;
+  font-size: 15px;
+  line-height: 30px;
+  margin-bottom: 2px;
+}
+
+.mtc .xzgd:hover {
+  background-color: #ccc;
+  color: rgb(209, 20, 178);
+}
+
+.mtc .xzgd span {
+  margin-left: 10px;
+}
+
+.mtc .xzgd img {
+  vertical-align: bottom;
+  width: 30px;
+  height: 30px;
+}

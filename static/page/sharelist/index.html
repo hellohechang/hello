@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="google" content="notranslate" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="assets">
+  <link rel="stylesheet" href="/css/reset.css?v=1672195985798hechang" />
+  <link rel="stylesheet" href="/css/iconfont.css?v=1672195985798hechang">
+  <link rel="stylesheet icon" href="/img/icon1.png">
+  <title id="title">ShareList</title>
+  <style>
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    .box {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      max-width: 1000px;
+      margin: 0 auto;
+      overflow: hidden;
+      border-left: 1px solid #ccc;
+      border-right: 1px solid #ccc;
+      color: rgb(88, 88, 88);
+      display: flex;
+      flex-flow: column;
+    }
+
+    @media (max-width:1000px) {
+      .box {
+        border: none;
+      }
+    }
+
+    .box .headBox {
+      flex: none;
+      border-bottom: 1px solid #ccc;
+      padding: 10px;
+      color: #767474;
+    }
+
+    .box .headBox span {
+      float: left;
+      font-size: 20px;
+    }
+
+    .box .headBox .clearShare {
+      float: right;
+    }
+
+    .box .headBox .clearShare:hover {
+      color: #000;
+    }
+
+    .box .list {
+      flex: auto;
+      overflow-y: auto;
+    }
+
+    .box .list p {
+      text-align: center;
+      line-height: 40px;
+      margin: 30px auto;
+      font-size: 20px;
+      color: #aaa;
+    }
+
+    .box .list li {
+      display: flex;
+      padding: 5px 10px;
+      align-items: center;
+      border-bottom: 1px solid rgb(240, 238, 238);
+    }
+
+    .box .list li div {
+      flex: auto;
+      word-break: break-all;
+      line-height: 20px;
+    }
+
+    .box .list li button {
+      flex: none;
+      outline: none;
+      height: 30px;
+      border: none;
+      padding: 0 8px;
+      background: #ccc;
+      transition: 0.3s;
+      margin: 0 5px;
+      color: rgb(108, 108, 108);
+    }
+
+    .box .list li button:hover {
+      color: rgb(255, 255, 255);
+      background-color: #aaa;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="box">
+    <div class="headBox"><span>分享列表:</span><span cursor class="clearShare iconfont icon-qingchu"></span></div>
+    <ul class="list"></ul>
+  </div>
+  <script src="/js/jquery.js"></script>
+  <script src="/js/common.js?v=1672195985798hechang"></script>
+  <script>
+    ~function () {
+      let $list = $('.list'),
+      $clearShare = $('.clearShare');
+      function render() {
+        _getAjax('/user/sharelist').then(res => {
+          if (res.code == 0) {
+            let str = ''
+            if (res.data.length === 0) {
+              str += `<p>It feels lonely here...</p>`
+            }
+            res.data.reverse()
+            res.data.forEach(item => {
+              let { id, type } = item,
+                url = `${sideURL}/${type === 'music' ? `page/sharemusic/#${id}` : `page/sharebm/#${id}`}`
+              str += `<li data-id="${id}" data-url="${url}">
+                <div>${url}</div>
+                <button cursor class="go">访问</button>
+                <button cursor class="delete">删除</button>
+              </li>
+              `
+            });
+            $list.html(str)
+          }
+        })
+      }
+      render()
+      $list.on('click', '.delete', function () {
+        let id = $(this).parent().attr('data-id')
+        alert(`确认删除？`, {
+          confirm: true,
+          handled: m => {
+            if (m !== 'confirm') return;
+            _postAjax('/user/deleteshare', { id }).then(res => {
+              if (res.code == 0) {
+                render()
+              }
+            })
+          }
+        });
+      }).on('click', '.go', function () {
+        _myOpen($(this).parent().attr('data-url'), '_blank')
+      })
+      $clearShare.click(function(){
+        alert(`确认清空？`, {
+          confirm: true,
+          handled: m => {
+            if (m !== 'confirm') return;
+            _postAjax('/user/deleteshare').then(res => {
+              if (res.code == 0) {
+                render()
+              }
+            })
+          }
+        });
+      })
+    }()
+  </script>
+</body>
+
+</html>

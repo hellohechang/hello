@@ -1,0 +1,388 @@
+a,
+abbr,
+acronym,
+address,
+applet,
+article,
+aside,
+audio,
+b,
+big,
+blockquote,
+body,
+canvas,
+caption,
+center,
+cite,
+code,
+dd,
+del,
+details,
+dfn,
+div,
+dl,
+dt,
+em,
+embed,
+fieldset,
+figcaption,
+figure,
+footer,
+form,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+header,
+hgroup,
+html,
+i,
+iframe,
+img,
+ins,
+kbd,
+label,
+legend,
+li,
+main,
+mark,
+menu,
+nav,
+object,
+ol,
+output,
+p,
+pre,
+q,
+ruby,
+s,
+samp,
+section,
+small,
+span,
+strike,
+strong,
+sub,
+summary,
+sup,
+table,
+tbody,
+td,
+tfoot,
+th,
+thead,
+time,
+tr,
+tt,
+u,
+ul,
+var,
+video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+  list-style: none;
+}
+
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+main,
+menu,
+nav,
+section {
+  display: block
+}
+
+[hidden] {
+  display: none
+}
+
+@font-face {
+  font-family: 'myfont';
+  src: url('/css/consolas.ttf') format("truetype");
+}
+
+body {
+  line-height: 1;
+  font-family: Consolas, 'myfont';
+}
+
+input,
+select,
+textarea,
+button {
+  font-family: inherit;
+}
+
+textarea,
+input {
+  -webkit-appearance: none;
+}
+
+menu,
+ol,
+ul {
+  list-style: none
+}
+
+blockquote,
+q {
+  quotes: none
+}
+
+blockquote:after,
+blockquote:before,
+q:after,
+q:before {
+  content: '';
+  content: none
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0
+}
+
+.clearfix:after {
+  content: "";
+  display: block;
+  clear: both
+}
+
+#paginationBox {
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  font-size: 0;
+  color: #fff;
+  line-height: 40px;
+}
+
+#paginationBox span,
+#paginationBox button {
+  display: inline-block;
+  font-size: 16px;
+  height: 30px;
+  line-height: 30px;
+  outline: none;
+}
+
+#paginationBox button {
+  margin: 0 5px;
+  padding: 0px 5px;
+  transition: .1s;
+  border: none;
+  border-radius: 5px;
+  color: #fff;
+  background-color: #1389a7c7;
+  min-width: 40px;
+  box-shadow: 2px 2px 5px #0000008a;
+}
+
+#paginationBox span {
+  margin: 0 5px;
+  padding: 0;
+}
+
+#paginationBox input {
+  display: inline-block;
+  font-size: 16px;
+  height: 30px;
+  outline: none;
+  width: 30px;
+  padding: 0;
+  border: none;
+  color: #fff;
+  background: transparent;
+  border-bottom: 1px solid #aaa;
+  text-align: center;
+}
+
+#paginationBox button:hover {
+  background-color: #0f6ce6;
+}
+
+#paginationBox button.active {
+  color: #fff;
+  background-color: #fe5d59c9;
+}
+
+#paginationBox button:active {
+  transition: 0;
+  transform: scale(.8);
+}
+
+body {
+  cursor: url("/img/normal.cur"), default
+}
+
+[cursor]:hover {
+  cursor: url("/img/link.cur"), pointer
+}
+
+/* 选中背景和字体颜色 */
+::selection {
+  background: #000;
+  color: #fff;
+}
+
+::-moz-selection {
+  background: #000;
+  color: #fff;
+}
+
+::-webkit-selection {
+  background: #000;
+  color: #fff;
+}
+
+/* 右键菜单 */
+.mtc::-webkit-scrollbar {
+  display: none;
+}
+
+.mtc .mtcitem,
+.mtc .mtcitem1,
+.mtc .mtcitem2,
+.mtc .mtcitem3,
+.mtc .mtcitem4,
+.mtc .mtcitem5,
+.mtc .mtcitem6,
+.mtc .mtcitem7,
+.mtc .mtcitem8,
+.mtc .mtcitem9,
+.mtc .mtcitem10 {
+  font-size: 18px;
+  line-height: 20px;
+  box-sizing: border-box;
+  margin: 5px;
+  padding: 5px;
+}
+
+.mtc .mtcitem:hover,
+.mtc .mtcitem1:hover,
+.mtc .mtcitem2:hover,
+.mtc .mtcitem3:hover,
+.mtc .mtcitem4:hover,
+.mtc .mtcitem5:hover,
+.mtc .mtcitem6:hover,
+.mtc .mtcitem7:hover,
+.mtc .mtcitem8:hover,
+.mtc .mtcitem9:hover,
+.mtc .mtcitem10:hover {
+  background-color: #ccc;
+  color: rgb(209, 20, 178);
+}
+
+.mtc .mtcitem:active,
+.mtc .mtcitem1:active,
+.mtc .mtcitem2:active,
+.mtc .mtcitem3:active,
+.mtc .mtcitem4:active,
+.mtc .mtcitem5:active,
+.mtc .mtcitem6:active,
+.mtc .mtcitem7:active,
+.mtc .mtcitem8:active,
+.mtc .mtcitem9:active,
+.mtc .mtcitem10:active {
+  transition: 0s;
+  opacity: .2;
+}
+
+.mtc .mtcinp,
+.mtc .mtcinp1,
+.mtc .mtcinp2,
+.mtc .mtcinp3,
+.mtc .mtcinp4,
+.mtc .mtcinp5,
+.mtc .mtcinp6,
+.mtc .mtcinp7,
+.mtc .mtcinp8,
+.mtc .mtcinp9,
+.mtc .mtcinp10 {
+  width: 90%;
+  margin: 10px auto 20px auto;
+}
+
+.mtc .mtcinp input,
+.mtc .mtcinp1 input,
+.mtc .mtcinp2 input,
+.mtc .mtcinp3 input,
+.mtc .mtcinp4 input,
+.mtc .mtcinp5 input,
+.mtc .mtcinp6 input,
+.mtc .mtcinp7 input,
+.mtc .mtcinp8 input,
+.mtc .mtcinp9 input,
+.mtc .mtcinp10 input {
+  width: 100%;
+  text-align: center;
+  border: 1px solid #ccc;
+  box-shadow: none;
+  color: #4a4949;
+  outline: none;
+  font-size: 20px;
+  box-sizing: border-box;
+  padding: 8px;
+  background-color: transparent;
+}
+
+.mtc .mtcinp input:focus,
+.mtc .mtcinp1 input:focus,
+.mtc .mtcinp2 input:focus,
+.mtc .mtcinp3 input:focus,
+.mtc .mtcinp4 input:focus,
+.mtc .mtcinp5 input:focus,
+.mtc .mtcinp6 input:focus,
+.mtc .mtcinp7 input:focus,
+.mtc .mtcinp8 input:focus,
+.mtc .mtcinp9 input:focus,
+.mtc .mtcinp10 input:focus {
+  border: 1px solid rgb(12, 12, 12);
+  background-color: #1413131e;
+}
+
+.mtc .mtcbtn {
+  display: block;
+  margin: 0 auto;
+  border: 1px solid #ccc;
+  line-height: 25px;
+  padding: 0 20px;
+}
+
+.mtc .mtcbtn:hover {
+  background-color: rgb(175, 173, 173);
+}
+
+.mtc .xzgd {
+  height: 30px;
+  font-size: 15px;
+  line-height: 30px;
+  margin-bottom: 2px;
+}
+
+.mtc .xzgd:hover {
+  background-color: #ccc;
+  color: rgb(209, 20, 178);
+}
+
+.mtc .xzgd span {
+  margin-left: 10px;
+}
+
+.mtc .xzgd img {
+  vertical-align: bottom;
+  width: 30px;
+  height: 30px;
+}

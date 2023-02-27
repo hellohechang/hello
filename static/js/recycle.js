@@ -1,0 +1,239 @@
+~async function () {
+  let $mbg = $('.mbg'),
+    $box = $('.box'),
+    $toplist = $('.toplist'),
+    $menu = $('.menu'),
+    $footer = $('footer'),
+    $showpage = $(".showpage");
+
+  _setTimeout(() => {
+    $toplist.addClass('open')
+  }, 600)
+  // 背景
+  let url = `/img/bg.jpg`;
+  imgjz(url, () => {
+    $mbg.css({
+      'background-image': `url('${url}')`,
+      opacity: '1'
+    });
+  });
+  // 渲染列表
+  function renderlistdefault() {
+    let str = '';
+    new Array(50).fill(null).forEach(v => {
+      str += `<ul style="pointer-events: none;height:20px;background-color: #ffffff5c;margin:6px" class="itemBox"></ul>`
+    });
+    $menu.html(str)
+    $box.scrollTop(0)
+  }
+  function renderlist(y) {
+    if (y) {
+      renderlistdefault()
+    }
+    let pagenum = $menu.pagenum,
+      type = $toplist.find('select').val();
+    slogo = 'icon-shoucang',
+      pagenum ? null : pagenum = 1;
+    if (type === 'note') {
+      slogo = 'icon-bijiben'
+    } else if (type === 'history') {
+      slogo = 'icon-lishijilu'
+    } else if (type === 'bookmk') {
+      slogo = 'icon-shuqian1'
+    }
+    let showpage = _getData('recycleshowpage') || 20;
+    _getAjax('/user/getrecycle', { page: pagenum, showpage, type }).then(result => {
+      if (parseInt(result.code) === 0) {
+        let str = '';
+        let { total,
+          totalPage,
+          data,
+          pageNo } = result.data;
+        $menu.pagenum = pageNo;
+        if (data.length === 0) {
+          str += `<p>It feels lonely here...</p>`
+        } else {
+          data.forEach(v => {
+            let { name, id, link, data } = v;
+            name ? null : name = data
+            name = encodeHtml(name);
+            link ? name = `${name}(${link})` : null
+            str += `<ul class="itemBox" data-id="${id}" data-type="${type}">
+                  <div cursor check="n" class="check"></div>
+                  <li class="logo iconfont ${slogo}"></li>
+                  <li title="${name}" class="noteitem">${name}</li>
+                </ul>`
+          });
+        }
+        if (totalPage > 1) {
+          str += `<div class="pagingbox">`;
+          str += pagination({ pageNo, pageSize: showpage, total })
+          str += `</div > `;
+        }
+        $menu.html(str)
+        $footer.fadeOut(100)
+        if (y) {
+          $box.scrollTop(0)
+        }
+      }
+    })
+  }
+  renderlist(true)
+  $toplist.find('select').on('change', function () {
+    renderlist(true)
+  })
+  let checkColor = 'rgb(118 254 89 / 58%)'
+
+  $menu.on('click', '.check', function (e) {
+    e.stopPropagation()
+    let $this = $(this),
+      check = $this.attr('check');
+    if (check === 'n') {
+      $this.attr('check', 'y').css('background-color', checkColor)
+    } else {
+      $this.attr('check', 'n').css('background-color', 'transparent')
+    }
+    let $itemBox = $('.itemBox'),
+      $checkArr = $itemBox.filter((_, item) => $(item).find('.check').attr('check') === 'y');
+    _success(`选中：${$checkArr.length}`, true)
+    if ($checkArr.length > 0) {
+      $footer.fadeIn(100)
+    } else {
+      $footer.fadeOut(100)
+    }
+    if ($checkArr.length === $itemBox.length) {
+      $footer.find('span').attr({
+        class: 'iconfont icon-xuanzeyixuanze',
+        check: 'y'
+      });
+    } else {
+      $footer.find('span').attr({
+        class: 'iconfont icon-xuanzeweixuanze',
+        check: 'n'
+      });
+    }
+  }).on('click', '.pagingbox', debounce(function (e) {
+    let target = e.target,
+      flag = target.getAttribute('data-flag');
+    if (target.tagName === 'BUTTON') {
+      if (flag === 'pre') {
+        $menu.pagenum = $menu.pagenum || 1;
+        $menu.pagenum--
+        renderlist(true)
+      } else if (flag === 'next') {
+        $menu.pagenum = $menu.pagenum || 1;
+        $menu.pagenum++
+        renderlist(true)
+      } else if (flag === 'go') {
+        let val = document.querySelector('.pagingbox #paginationBox input').value.trim();
+        val = parseInt(val)
+        if (isNaN(val)) return;
+        $menu.pagenum = val;
+        renderlist(true)
+      } else if (flag === 'gotop') {
+        $box.scrollTop(0)
+      } else {
+        $menu.pagenum = +flag;
+        renderlist(true)
+      }
+    }
+  }, 500, true))
+
+  $footer.find('span').click(function () {
+    let che = $(this).attr('check');
+    che === 'y' ? che = 'n' : che = 'y';
+    $footer.find('span').attr({
+      class: che === 'y' ? 'iconfont icon-xuanzeyixuanze' : 'iconfont icon-xuanzeweixuanze',
+      check: che
+    });
+    let $itemBox = $('.itemBox')
+    $itemBox.find('.check').attr('check', che).css('background-color', che === 'y' ? checkColor : 'transparent')
+    _success(`选中：${che === 'y' ? $itemBox.length : 0}`, true)
+  })
+  $footer.on('click', '.delAll', function () {
+    let $itemBox = $('.itemBox'),
+      $checkArr = $itemBox.filter((_, item) => $(item).find('.check').attr('check') === 'y');
+    if ($checkArr.length === 0) return;
+    let arr = [];
+    $checkArr.each((i, v) => {
+      let $v = $(v);
+      arr.push($v.attr("data-id"));
+    });
+    let type = $itemBox.attr('data-type');
+    alert(`确认删除？`, {
+      confirm: true,
+      handled: msg => {
+        if (msg === 'confirm') {
+          _postAjax('/user/deleterecycle', {
+            arr, type
+          }).then(result => {
+            if (parseInt(result.code) === 0) {
+              renderlist()
+              return
+            }
+          })
+          return
+        }
+      }
+    })
+  }).on('click', '.recoverAll', function () {
+    let $itemBox = $('.itemBox'),
+      $checkArr = $itemBox.filter((_, item) => $(item).find('.check').attr('check') === 'y');
+    if ($checkArr.length === 0) return;
+    let arr = [];
+    $checkArr.each((i, v) => {
+      let $v = $(v);
+      arr.push($v.attr("data-id"));
+    });
+    let type = $itemBox.attr('data-type');
+    alert(`确认恢复？`, {
+      confirm: true,
+      handled: msg => {
+        if (msg === 'confirm') {
+          _postAjax('/user/recoverrecycle', {
+            arr, type
+          }).then(result => {
+            if (parseInt(result.code) === 0) {
+              renderlist()
+              return
+            }
+          })
+          return
+        }
+      }
+    })
+  }).on('click', '.off', function () {
+    let $itemBox = $('.itemBox');
+    $itemBox.find('.check').attr('check', 'n').css('background-color', 'transparent')
+    $footer.fadeOut(100)
+  })
+  ~function () {
+    let p = 0, t = 0;
+    $box.on('scroll', throttle(function () {
+      p = $box.scrollTop()
+      if (p <= 200) {
+        t = p
+        $toplist.addClass('open')
+        return
+      }
+      if (p >= t) {
+        $toplist.removeClass('open')
+      } else {
+        $toplist.addClass('open')
+      }
+      _setTimeout(() => {
+        t = p
+      })
+    }, 500))
+  }()
+  $showpage.val(_getData('recycleshowpage') || 20)
+  $showpage.on('change', function () {
+    let val = $(this).val();
+    _setData('recycleshowpage', val)
+    if ($menu.pagenum == 1) {
+      renderlist()
+    } else {
+      renderlist(true)
+    }
+  })
+}()

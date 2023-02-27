@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="google" content="notranslate" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="assets">
+  <link rel="stylesheet" href="/css/reset.css?v=1672195985797hechang" />
+  <link rel="stylesheet" href="/css/iconfont.css?v=1672195985784hechang">
+  <link rel="stylesheet icon" href="/img/manage.jpg">
+  <style>
+    html {
+      width: 100%;
+      height: 100%
+    }
+
+    body {
+      height: 100%;
+      padding: 30px 0 0 10px;
+      overflow-y: auto;
+    }
+
+    .userlist {
+      height: 50px;
+      line-height: 50px;
+      color: #8a2be2
+    }
+
+    .userbox li {
+      line-height: 32px
+    }
+
+    button {
+      outline: none;
+      height: 30px;
+      border: none;
+      padding: 0 8px;
+      background: #ccc;
+      transition: 0.3s;
+      color: rgb(108, 108, 108);
+      cursor: pointer;
+    }
+
+    button:hover {
+      color: rgb(255, 255, 255);
+      background-color: #aaa;
+    }
+  </style>
+  <title>Administrator</title>
+</head>
+
+<body>
+  <button cursor style="margin-bottom: 5px;" class="clearupload">清空upload</button>
+  <button cursor style="margin-bottom: 5px;" class="clearchat">清除聊天记录</button>
+  <button cursor style="margin-bottom: 5px;" class="delmusicfile">清除多余歌曲文件</button>
+  <div cursor class="userlist">用户列表</div>
+  <ul class="userbox"></ul>
+  <script src="/js/jquery.js"></script>
+  <script src="/js/common.js?v=1672195985797hechang"></script>
+  <script src="/js/root.js?v=1672195985797hechang"></script>
+</body>
+
+</html>

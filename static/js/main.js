@@ -825,7 +825,7 @@
       // 编辑列表
       if (_getTarget(e, '.mtcitem')) {
         let str = `<div class="mtcinp">
-          <input autocomplete="off" value="${obj.name}" type="text">
+          <input autocomplete="off" value="${encodeHtml(obj.name)}" type="text">
         </div>
         <button cursor class="mtcbtn">提交</button>`;
         rightMenu.open(e, str, debounce(function (e, inp) {
@@ -983,7 +983,7 @@
         rightMenu.close()
       } else if (_getTarget(e, '.mtcitem3')) {// 修改书签
         let str = `<div class="mtcinp">
-            <input autocomplete="off" value="${obj.name}" type="text">
+            <input autocomplete="off" value="${encodeHtml(obj.name)}" type="text">
           </div>
           <div class="mtcinp1">
             <input autocomplete="off" value="${obj.link}" type="text">
@@ -1481,7 +1481,7 @@
         rightMenu.close()
       } else if (_getTarget(e, '.mtcitem3')) { //编辑书签
         let str = `<div class="mtcinp">
-              <input autocomplete="off" value="${obj.name}" type="text">
+              <input autocomplete="off" value="${encodeHtml(obj.name)}" type="text">
             </div>
             <div class="mtcinp1">
               <input autocomplete="off" value="${obj.link}" type="text">
@@ -3940,7 +3940,7 @@
             <input autocomplete="off" placeholder='num: ${+index + 1}' type="text">
           </div>
           <div class="mtcinp1">
-            <input autocomplete="off" value="${name}" type="text">
+            <input autocomplete="off" value="${encodeHtml(name)}" type="text">
           </div>
         <button cursor class="mtcbtn">提交</button>`;
     rightMenu.open(e, str, debounce(function (e, inp) {
@@ -4996,7 +4996,7 @@
     }
     e.stopPropagation();
     let str = `<div class="mtcinp">
-              <input autocomplete="off" value="${_userinfo.username}" type="text">
+              <input autocomplete="off" value="${encodeHtml(_userinfo.username)}" type="text">
             </div>
             <button cursor class="mtcbtn">提交</button>`;
     rightMenu.open(e, str, debounce(function (e, inp) {
@@ -5030,7 +5030,7 @@
     }
     e.stopPropagation();
     let str = `<div class="mtcinp">
-              <input autocomplete="off" value="${_userinfo.email || ''}" type="text">
+              <input autocomplete="off" value="${encodeHtml(_userinfo.email || '')}" type="text">
             </div>
             <button cursor class="mtcbtn">提交</button>`;
     rightMenu.open(e, str, debounce(function (e, inp) {
@@ -5340,7 +5340,7 @@
         str += `</li>`;
       }
       str += `<li class="guestbookitemcon">`;
-      str += `<span title="${date[1]}" class="lyusername" style="text-align: ${!isright ? 'left' : 'right'};">${showname ? `${name}` : ''} <span style="color: #aaa;">${date[1]}</span></span>`;
+      str += `<span class="lyusername" style="text-align: ${!isright ? 'left' : 'right'};">${showname ? `${name}` : ''} <span style="color: #aaa;">${date[1]}</span></span>`;
       if (isrc) {
         if (/(\.JPG|\.PNG|\.GIF|\.JPEG)$/ig.test(isrc)) {
           str += `<div class="xfileimgwrap" style="float: ${!isright ? 'left' : 'right'};">

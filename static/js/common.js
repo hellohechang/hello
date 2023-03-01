@@ -1011,6 +1011,7 @@ window.alert = function () {
               padding: 20px 10px;
               line-height: 20px;
               font-size: 16px;
+              word-break: break-all;
               `);
       this._footer = this.createEl(`
               text-align: right;

@@ -341,6 +341,7 @@ nav .dirBox li:active,
   box-sizing: border-box;
   margin: 5px;
   padding: 5px;
+  word-break: break-all;
 }
 
 .mtc .mtcitem:hover,
@@ -439,10 +440,12 @@ nav .dirBox li:active,
 }
 
 .mtc .xzgd {
-  height: 30px;
-  font-size: 15px;
-  line-height: 30px;
+  font-size: 16px;
   margin-bottom: 2px;
+  word-break: break-all;
+  padding: 6px;
+  display: flex;
+  align-items: center;
 }
 
 .mtc .xzgd:hover {

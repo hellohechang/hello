@@ -755,15 +755,15 @@
       arr.push($v.attr("data-id"));
     });
     let str = ``;
-    str += `<div data-name="Home" cursor class="xzgd" data-id="home"><i class='iconfont icon-shoucang'></i><span>主页</span></div>`;
+    str += `<div data-name="Home" cursor class="mtcitem" data-id="home"><i class='iconfont icon-shoucang'></i><span style="margin-left:10px;">主页</span></div>`;
     _bookmark.side.forEach(item => {
       let name = encodeHtml(item.name);
       if (item.id !== pid) {
-        str += `<div data-name="${name}" class="xzgd" data-id="${item.id}"><i class='iconfont icon-shoucang'></i><span>${name}</span></div>`;
+        str += `<div data-name="${name}" class="mtcitem" data-id="${item.id}"><i class='iconfont icon-shoucang'></i><span style="margin-left:10px;">${name}</span></div>`;
       }
     })
     rightMenu.open(e, str, debounce(function (e) {
-      let _this = _getTarget(e, '.xzgd')
+      let _this = _getTarget(e, '.mtcitem')
       if (_this) {
         let $this = $(_this),
           toid = $this.attr('data-id'),
@@ -1018,15 +1018,15 @@
         }, 1000, true))
       } else if (_getTarget(e, '.mtcitem4')) {// 移动书签
         let str = ``;
-        str += `<div data-name="Home" cursor class="xzgd" data-id="home"><i class='iconfont icon-shoucang'></i><span>主页</span></div>`;
+        str += `<div data-name="Home" cursor class="mtcitem" data-id="home"><i class='iconfont icon-shoucang'></i><span style="margin-left:10px;">主页</span></div>`;
         _bookmark.side.forEach(item => {
           let name = encodeHtml(item.name);
           if (item.id !== obj.pid) {
-            str += `<div data-name="${name}" class="xzgd" data-id="${item.id}"><i class='iconfont icon-shoucang'></i><span>${name}</span></div>`;
+            str += `<div data-name="${name}" class="mtcitem" data-id="${item.id}"><i class='iconfont icon-shoucang'></i><span style="margin-left:10px;">${name}</span></div>`;
           }
         })
         rightMenu.open(e, str, debounce(function (e) {
-          let _this = _getTarget(e, '.xzgd')
+          let _this = _getTarget(e, '.mtcitem')
           if (_this) {
             let $this = $(_this),
               toid = $this.attr('data-id'),
@@ -1353,10 +1353,10 @@
     str += ``
     _bookmark.side.forEach((v, i) => {
       let name = encodeHtml(v.name)
-      str += `<div data-name="${name}" cursor class="xzgd" data-id="${v.id}"><i class='iconfont icon-shoucang'></i><span>${name}</span></div>`;
+      str += `<div data-name="${name}" cursor class="mtcitem" data-id="${v.id}"><i class='iconfont icon-shoucang'></i><span style="margin-left:10px;">${name}</span></div>`;
     });
     rightMenu.open(e, str, debounce(function (e) {
-      let _this = _getTarget(e, '.xzgd')
+      let _this = _getTarget(e, '.mtcitem')
       if (_this) {
         let $this = $(_this),
           nid = $this.attr("data-id"),
@@ -1522,10 +1522,10 @@
         }
         _bookmark.side.forEach((v, i) => {
           let name = encodeHtml(v.name)
-          str += `<div data-name="${name}" cursor class="xzgd" data-id="${v.id}"><i class='iconfont icon-shoucang'></i><span>${name}</span></div>`;
+          str += `<div data-name="${name}" cursor class="mtcitem" data-id="${v.id}"><i class='iconfont icon-shoucang'></i><span style="margin-left:10px;">${name}</span></div>`;
         });
         rightMenu.open(e, str, debounce(function (e) {
-          let _this = _getTarget(e, '.xzgd')
+          let _this = _getTarget(e, '.mtcitem')
           if (_this) {
             let $this = $(_this),
               nid = $this.attr("data-id"),
@@ -1608,10 +1608,10 @@
     e.stopPropagation();
     let str = ``;
     searchengine.forEach((v, i) => {
-      str += `<div title="${v.name}" cursor class="xzgd" xi=${i}><img src="${v.icon}"><span>${v.name}</span></div>`;
+      str += `<div title="${v.name}" cursor class="mtcitem" xi=${i}><img style="width: 40px;height: 40px;" src="${v.icon}"><span style="margin-left:10px;">${v.name}</span></div>`;
     });
     rightMenu.open(e, str, debounce(function (e) {
-      let _this = _getTarget(e, '.xzgd')
+      let _this = _getTarget(e, '.mtcitem')
       if (_this) {
         $state.removeClass("statem");
         let xi = $(_this).attr('xi'),
@@ -2267,11 +2267,11 @@
               _setData('dian', 'y')
             }
           } else if (_getTarget(e, '.mtcitem7')) {
-            let str = `<div cursor data-flag="n" style="text-align:center;" class="mtcitem"><span style="line-height:40px;">关闭</span></div>
-                      <div cursor data-flag="y" style="text-align:center;" class="mtcitem"><span style="line-height:40px;">随机</span></div>`
+            let str = `<div cursor data-flag="n" style="justify-content: center;" class="mtcitem"><span style="line-height:40px;">关闭</span></div>
+                      <div cursor data-flag="y" style="justify-content: center;" class="mtcitem"><span style="line-height:40px;">随机</span></div>`
             let [x, y] = loadingNum;
             for (let i = x; i <= y; i++) {
-              str += `<div cursor data-flag="${i}" style="text-align:center;" class="mtcitem"><img style="width:40px;" src="/img/loading${i}.gif"></div>`
+              str += `<div cursor data-flag="${i}" style="justify-content: center;" class="mtcitem"><img style="width:40px;height:40px" src="/img/loading${i}.gif"></div>`
             }
             rightMenu.open(e, str, function (e) {
               let _this = _getTarget(e, '.mtcitem')
@@ -4216,11 +4216,11 @@
     _music.forEach((item, i) => {
       if (item.id !== id && i > 1) {
         let name = encodeHtml(item.name);
-        str += `<div data-name="${name}" cursor class="xzgd" data-id="${item.id}"><img src="${item.pic}"><span>${name}</span></div>`;
+        str += `<div data-name="${name}" cursor class="mtcitem" data-id="${item.id}"><img style="width: 40px;height: 40px;" src="${item.pic}"><span style="margin-left:10px;">${name}</span></div>`;
       }
     })
     rightMenu.open(e, str, debounce(function (e, inp) {
-      let _this = _getTarget(e, '.xzgd')
+      let _this = _getTarget(e, '.mtcitem')
       if (_this) {
         let $this = $(_this),
           tid = $this.attr('data-id'),
@@ -4372,12 +4372,12 @@
           _music.forEach((v, i) => {
             if (i > 1 && v.id !== id) {
               let name = encodeHtml(v.name);
-              str += `<div data-name="${name}" cursor class="xzgd" data-id="${v.id}"><img src="${v.pic}"><span>${name}</span></div>`;
+              str += `<div data-name="${name}" cursor class="mtcitem" data-id="${v.id}"><img style="width: 40px;height: 40px;" src="${v.pic}"><span style="margin-left:10px;">${name}</span></div>`;
             };
           });
           str += '</div>'
           rightMenu.open(e, str)
-          $(".xzgd").on("click", function (e) {
+          $(".mtcitem").on("click", function (e) {
             e.stopPropagation();
             let $this = $(this),
               tid = $this.attr('data-id'),
@@ -5527,7 +5527,7 @@
       return
     };
     let str = `
-    <div cursor class="mtcitem2" style="text-align:center;">${b}</div>
+    <div cursor class="mtcitem2" style="justify-content: center;">${b}</div>
     ${obj.account == "chang" ? '<div cursor class="mtcitem">发送消息</div>' : ''}
     <div cursor class="mtcitem1">查看笔记</div>
     `
@@ -6147,7 +6147,7 @@
     }
     if (_userinfo.account == a) return;
     let str = `
-    <div cursor class="mtcitem2" style="text-align:center;">${b}</div>
+    <div cursor class="mtcitem2" style="justify-content: center;">${b}</div>
     <div cursor class="mtcitem">发送消息</div>
     <div cursor class="mtcitem1">查看笔记</div>
     `

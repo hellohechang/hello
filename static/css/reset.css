@@ -264,11 +264,12 @@ body {
 .mtc .mtcitem9,
 .mtc .mtcitem10 {
   font-size: 18px;
-  line-height: 20px;
   box-sizing: border-box;
-  margin: 5px;
-  padding: 5px;
+  margin: 2px;
+  padding: 6px;
   word-break: break-all;
+  display: flex;
+  align-items: center;
 }
 
 .mtc .mtcitem:hover,
@@ -364,28 +365,4 @@ body {
 
 .mtc .mtcbtn:hover {
   background-color: rgb(175, 173, 173);
-}
-
-.mtc .xzgd {
-  font-size: 16px;
-  margin-bottom: 2px;
-  word-break: break-all;
-  padding: 6px;
-  display: flex;
-  align-items: center;
-}
-
-.mtc .xzgd:hover {
-  background-color: #ccc;
-  color: rgb(209, 20, 178);
-}
-
-.mtc .xzgd span {
-  margin-left: 10px;
-}
-
-.mtc .xzgd img {
-  vertical-align: bottom;
-  width: 30px;
-  height: 30px;
 }

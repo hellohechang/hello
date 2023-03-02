@@ -208,8 +208,15 @@ nav {
   overflow-y: auto;
   color: #e7f1ff;
   background-color: #6c6c6cee;
+  transform: translateY(-100%);
+  opacity: 0;
+  transition: .5s;
 }
 
+nav.open {
+  transform: translateY(0);
+  opacity: 1;
+}
 
 nav .dirBox {
   margin: 0;

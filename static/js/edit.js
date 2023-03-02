@@ -61,7 +61,8 @@
     // 渲染转换显示
     function rende() {
         let text = $codeBox.val(),
-            show = marked.parse(text);
+            // show = marked.parse(text);
+            show = window.markdownit().render(text);
         if (HASH) {
             if (reg.test(HASH)) {//本地模式
                 let local = _getData('md') || [],
@@ -169,8 +170,11 @@
         $codeBox.toggle()
     })
     $save.click(throttle(saveNote, 1000))
+    let $nav = $navwrap.find('nav')
     $textData.click(function () {
-        $navwrap.fadeIn(_speed)
+        $navwrap.fadeIn(0, () => {
+            $nav.addClass('open')
+        })
         let local = _getData('md') || [],
             str = "";
         local.reverse()
@@ -185,7 +189,7 @@
                 let { name, data } = item;
                 data = encodeHtml(data.slice(0, 500) + '...')
                 str += `
-                <li title="${data}" data-name="${name}">
+                <li cursor title="${data}" data-name="${name}">
                 <span class="textname">${newDate("{0}-{1}-{2} {3}:{4}:{5}", name.split('_')[1])}</span>
                 <span class="delete iconfont icon-guanbi"></span>
                 </li>
@@ -196,7 +200,10 @@
     })
     $navwrap.click(function (e) {
         if (_getTarget(e, '.navwrap', 1)) {
-            $navwrap.fadeOut(_speed)
+            $nav.removeClass('open')
+            _setTimeout(() => {
+                $navwrap.fadeOut(0)
+            }, 500)
         }
     }).on('click', '.textname', function () {
         let name = $(this).parent().attr('data-name')

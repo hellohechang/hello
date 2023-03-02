@@ -63,7 +63,8 @@
         let logoUrl = `${mediaURL}/logo/${account}/${account}.png`
         $from.find('.logo').attr('title', username).css('background-image', `url(${logoUrl})`)
         data = `# ${name}\n` + data
-        let str = marked.parse(data);
+        // let str = marked.parse(data);
+        let str = window.markdownit().render(data);
         $markdown.html(str)
         $('pre').append(`<div title="复制" cursor class="codeCopy iconfont icon-fuzhi"><div>`).prepend(`<div data-flag="y" cursor class="shrink iconfont icon-Down"><div>`)
         // hljs.initHighlightingOnLoad();
@@ -96,7 +97,7 @@
   }
   $from.find('.logo').click(debounce(function (e) {
     let { account, username, own } = $from._uobj;
-    let str = `<div cursor class="mtcitem" style="text-align:center;">${username}</div>
+    let str = `<div cursor class="mtcitem" style="justify-content: center;">${username}</div>
     <div cursor class="mtcitem1">查看更多</div>`
     rightMenu.open(e, str, debounce(function (e) {
       if (_getTarget(e, '.mtcitem1')) {
@@ -289,45 +290,17 @@
 
   let BlogDirectory = function () {
     let box = document.querySelector('.markdownbox'),
-      allEl = box.getElementsByTagName('*'),
       navwrap = document.querySelector('.navwrap'),
       dirBox = document.querySelector('.dirBox'),
       showDir = document.querySelector('.showDir'),
-      allH = []
-    str = '';
-    for (let i = 0; i < allEl.length; i++) {
-      let item = allEl[i],
-        text = encodeHtml(item.innerText),
-        id = item.id;
-      switch (item.tagName) {
-        case 'H1':
-          str += `<li cursor title="${text}" data-id="${id}">-${text}</li>`
-          allH.push(item)
-          break;
-        case 'H2':
-          str += `<li cursor title="${text}" data-id="${id}">--${text}</li>`
-          allH.push(item)
-          break;
-        case 'H3':
-          str += `<li cursor title="${text}" data-id="${id}">---${text}</li>`
-          allH.push(item)
-          break;
-        case 'H4':
-          str += `<li cursor title="${text}" data-id="${id}">----${text}</li>`
-          allH.push(item)
-          break;
-        case 'H5':
-          str += `<li cursor title="${text}" data-id="${id}">-----${text}</li>`
-          allH.push(item)
-          break;
-        case 'H6':
-          str += `<li cursor title="${text}" data-id="${id}">------${text}</li>`
-          allH.push(item)
-          break;
-        default:
-          break;
-      }
-    }
+      allH = [...box.querySelectorAll('h1,h2,h3,h4,h5,h6')],
+      str = '';
+    allH.forEach((item, idx) => {
+      let text = encodeHtml(item.innerText)
+      // let flag = new Array(+item.tagName.slice(1)).fill('-').join('')
+      item.id = 'hello_' + idx;
+      str += `<li h="${item.tagName.slice(1)}" cursor title="${text}" data-id="hello_${idx}">${text}</li>`
+    })
     if (str === '') { } else {
       dirBox.innerHTML = str
       showDir.style.display = 'block';
@@ -340,14 +313,17 @@
 
     navwrap.addEventListener('click', function (e) {
       let target = e.target;
-      allLi.forEach(item => {
-        item.classList.remove('open')
-      })
       if (_getTarget(e, '.navwrap', 1)) {
-        this.style.display = 'none'
+        $nav.removeClass('open')
+        _setTimeout(() => {
+          this.style.display = 'none'
+        }, 500)
         return
       }
       if (target.tagName === 'LI') {
+        allLi.forEach(item => {
+          item.classList.remove('open')
+        })
         target.classList.add('open')
         let id = target.getAttribute('data-id'),
           el = $box.find(`#${id}`),
@@ -365,6 +341,9 @@
         item.classList.remove('open')
       })
       navwrap.style.display = 'block';
+      _setTimeout(() => {
+        $nav.addClass('open')
+      }, 100)
       let smalltopH = allH.filter(item => _position(item, true).top >= 0)[0];
       smalltopH ? null : smalltopH = allH[allH.length - 1]
       if (smalltopH) {

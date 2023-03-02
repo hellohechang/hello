@@ -67,7 +67,8 @@
                   <li class="notemenu iconfont icon-icon"></li>
                   </ul>`
             if (con) {
-              str += `<p>${con}...</p>`
+              let [a, b, c] = con
+              str += `<p>${encodeHtml(a)}<span style="color:red;">${encodeHtml(b)}</span>${encodeHtml(c)}</p>`
             }
           });
         }

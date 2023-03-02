@@ -863,22 +863,27 @@ function queryURLParams(url) {
   return obj;
 }
 // 转义字符串
-function encodeHtml(html) {
-  return html && html.replace ?
+function encodeHtml(str) {
+  return str && str.replace ?
     (
-      html.replace(/&/g, "&amp;")
+      str.replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;")
         .replace(/\\/g, "&#92;")
         .replace(/\//g, "&#x2F;")
+        .replace(/ /g, "&nbsp;")
         .replace(/\'/g, "&#39;")
         .replace(/\"/g, "&quot;")
     )
-    : html;
+    : str;
 }
 function isUserName(str) {
   let reg = /^[\u2E80-\u2FDF\u3040-\u318F\u31A0-\u31BF\u31F0-\u31FF\u3400-\u4DB5\u4E00-\u9FFF\uA960-\uA97F\uAC00-\uD7FF\w -]+$/g;
-  return reg.test(str)
+  return str && reg.test(str)
+}
+function isFileName(str) {
+  let reg = /[\/\\\:\*\"\<\>\|\？]/g;
+  return str && !reg.test(str)
 }
 function _each(obj, callback, context) {
   let isLikeArray = Object.prototype.toString.call(obj) === '[object Array]' || (('length' in obj) && typeof obj.length === 'number');
@@ -1040,8 +1045,8 @@ window.alert = function () {
               background: #DDD;`,
         'button');
       //=>插入到页面中
-      this._title.innerHTML = title;
-      this._close.innerHTML = 'x';
+      this._title.innerText = title;
+      this._close.innerText = 'x';
       this._close.setAttribute('cursor', '');
       this._header.appendChild(this._title);
       this._header.appendChild(this._close);

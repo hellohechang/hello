@@ -7,7 +7,6 @@ const {
 } = require('../sqlite');
 const {
   writelog,
-  encodeHtml,
   _success,
   _nologin,
   _err,
@@ -60,14 +59,14 @@ route.get('/allsearchlist', async (req, res) => {
         tlstr = data.toLowerCase(),//转换为小写
           i = tlstr.indexOf(a);//搜索词在笔记中第一次出现的索引
         if (i >= 0) {//所有内容含有搜索词的笔记
-          let yzf = encodeHtml(data.substring(i, i + a.length)),//截取笔记中搜索词原始内容
-            bef = encodeHtml(data.substring(i - 20, i)),
-            aft = encodeHtml(data.substring(i + a.length, i + 60));
+          let yzf = data.substring(i, i + a.length),//截取笔记中搜索词原始内容
+            bef = data.substring(i - 30, i),
+            aft = data.substring(i + a.length, i + 80);
           arr.push({
             id,
             share,
             name,
-            con: `<span>${bef}</span><span style="color:red;">${yzf}</span><span>${aft}</span>`
+            con: [bef, yzf, aft]
           });
         }
         if (name.toLowerCase().includes(a)) {//所有标题含有搜索词的笔记
@@ -159,14 +158,14 @@ route.get('/searchlist', async (req, res) => {
         tlstr = data.toLowerCase(),//转换为小写
           i = tlstr.indexOf(a);//搜索词在笔记中第一次出现的索引
         if (i >= 0) {//所有内容含有搜索词的笔记
-          let yzf = encodeHtml(data.substring(i, i + a.length)),//截取笔记中搜索词原始内容
-            bef = encodeHtml(data.substring(i - 20, i)),
-            aft = encodeHtml(data.substring(i + a.length, i + 60));
+          let yzf = data.substring(i, i + a.length),//截取笔记中搜索词原始内容
+            bef = data.substring(i - 30, i),
+            aft = data.substring(i + a.length, i + 80);
           arr.push({
             id,
             share,
             name,
-            con: `<span>${bef}</span><span style="color:red;">${yzf}</span><span>${aft}</span>`
+            con: [bef, yzf, aft]
           });
         }
         if (name.toLowerCase().includes(a)) {//所有标题含有搜索词的笔记

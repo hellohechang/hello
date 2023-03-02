@@ -202,20 +202,6 @@ function qucong(arr) {
   }, []);
   return arr;
 }
-// 转义字符串
-function encodeHtml(html) {
-  return html && html.replace ?
-    (
-      html.replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/\\/g, "&#92;")
-        .replace(/\//g, "&#x2F;")
-        .replace(/\'/g, "&#39;")
-        .replace(/\"/g, "&quot;")
-    )
-    : html;
-}
 // 压缩图片
 function compressionImg(p1, p2, x, y) {
   return new Promise((resolve, reject) => {
@@ -438,7 +424,6 @@ module.exports = {
   extname,
   encryption,
   qucong,
-  encodeHtml,
   compressionImg,
   _send,
   _success,

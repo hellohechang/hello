@@ -3916,9 +3916,9 @@
       <div class="qxcz">
         <div cursor x='1' class="qxbtn">全选</div>
         ${_userinfo.account === 'root' && ind > 1 ? '<div cursor title="Move to" class="qxydbtn">移动到</div>' : ''}
-        ${ind > 1 ? `<div cursor title="添加到播放列表" class="alladdtop">添加</div>
-        <div cursor class="schxbtn">收藏</div>` : ''}
-        ${_userinfo.account === 'root' ? '<div cursor class="qxycbtn">删除</div>' : (ind < 2 ? `<div cursor class="qxycbtn">删除</div>` : '')}
+        <div cursor title="添加到播放列表" class="alladdtop">添加</div>
+        ${ind == 1 ? '' : '<div cursor class="schxbtn">收藏</div>'}
+        ${_userinfo.account === 'root' || ind < 2 ? '<div cursor class="qxycbtn">删除</div>' : ''}
       </div>`;
     $mmmlist.children('.mmmitemwrap').html(str)
     $mmmlist._duoxuan = false

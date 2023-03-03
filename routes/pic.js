@@ -66,7 +66,7 @@ route.post("/delpic", async (req, res) => {
     _unlink(`${mediaurl.filepath}/pic/${url}`);
     _unlink(`${mediaurl.filepath}/picys/${url}`);
     _success(res);
-    await writelog(req,`删除图片[${url}]`)
+    await writelog(req, `删除图片[${url}]`)
   } catch (error) {
     await writelog(req, `[${req._pathUrl}] ${error}`)
     _err(res)
@@ -78,7 +78,6 @@ route.post("/up", async (req, res) => {
     let path = `${mediaurl.filepath}/upload/${req.query.HASH}`;
     await _mkdir(path);
     await receiveFiles(req, path, req.query.name)
-    await writelog(req,`上传图片[${req.query.name}]`)
     _success(res)
   } catch (error) {
     await writelog(req, `[${req._pathUrl}] ${error}`)
@@ -90,6 +89,7 @@ route.post('/mergefile', async (req, res) => {
   try {
     let { HASH, count, name } = req.body;
     await mergefile(count, `${mediaurl.filepath}/upload/${HASH}`, `${mediaurl.filepath}/pic/${name}`)
+    await writelog(req, `上传图片[${name}]`)
     _success(res)
   } catch (error) {
     await writelog(req, `[${req._pathUrl}] ${error}`)

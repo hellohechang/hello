@@ -329,7 +329,7 @@
           el = $box.find(`#${id}`),
           _top = _position(el[0], true).top + $box.scrollTop();
         $box.stop().animate({
-          scrollTop: _top - 60
+          scrollTop: _top - $box.height() / 4
         }, _speed)
         return
       }
@@ -351,7 +351,7 @@
         if (cuLi) {
           cuLi.classList.add('open')
           $nav.animate({
-            scrollTop: nav.scrollTop + _position(cuLi, true).top
+            scrollTop: nav.scrollTop + _position(cuLi, true).top - navwrap.clientHeight / 4
           }, _speed)
         }
       }

@@ -289,73 +289,60 @@
   })
 
   let BlogDirectory = function () {
-    let box = document.querySelector('.markdownbox'),
-      navwrap = document.querySelector('.navwrap'),
-      dirBox = document.querySelector('.dirBox'),
-      showDir = document.querySelector('.showDir'),
-      allH = [...box.querySelectorAll('h1,h2,h3,h4,h5,h6')],
+    let $mdBox = $('.markdownbox'),
+      $navwrap = $('.navwrap'),
+      $dirBox = $('.dirBox'),
+      $showDir = $('.showDir'),
+      $allH = $mdBox.find('h1,h2,h3,h4,h5,h6'),
       str = '';
-    allH.forEach((item, idx) => {
+    $allH.each((idx, item) => {
       let text = encodeHtml(item.innerText)
-      // let flag = new Array(+item.tagName.slice(1)).fill('-').join('')
       item.id = 'hello_' + idx;
       str += `<li h="${item.tagName.slice(1)}" cursor title="${text}" data-id="hello_${idx}">${text}</li>`
     })
-    if (str === '') { } else {
-      dirBox.innerHTML = str
-      showDir.style.display = 'block';
-    }
+    $dirBox.html(str)
 
-    let allLi = [...navwrap.querySelectorAll('li')]
-    let nav = navwrap.querySelector('nav')
-    let $nav = $(nav);
+    let $allLi = $navwrap.find('li')
 
-
-    navwrap.addEventListener('click', function (e) {
-      let target = e.target;
-      if (_getTarget(e, '.navwrap', 1)) {
-        $nav.removeClass('open')
-        _setTimeout(() => {
-          this.style.display = 'none'
-        }, 500)
-        return
-      }
-      if (target.tagName === 'LI') {
-        allLi.forEach(item => {
-          item.classList.remove('open')
-        })
-        target.classList.add('open')
-        let id = target.getAttribute('data-id'),
-          el = $box.find(`#${id}`),
-          _top = _position(el[0], true).top + $box.scrollTop();
-        $box.stop().animate({
-          scrollTop: _top - $box.height() / 4
-        }, _speed)
-        return
+    $navwrap.on('click', 'li', function (e) {
+      let $this = $(this)
+      $allLi.removeClass('open')
+      $this.addClass('open')
+      let id = $this.attr('data-id'),
+        el = $box.find(`#${id}`),
+        _top = _position(el[0], true).top + $box.scrollTop();
+      $box.stop().animate({
+        scrollTop: _top - 60
+      }, _speed)
+    }).on('click', '.navClose', function () {
+      $navwrap.removeClass('open');
+    })
+    _mySlide({
+      el: '.navwrap',
+      right() {
+        $navwrap.removeClass('open');
       }
     })
-
-    showDir.addEventListener('click', (e) => {
-      e.stopPropagation()
-      allLi.forEach(item => {
-        item.classList.remove('open')
-      })
-      navwrap.style.display = 'block';
-      _setTimeout(() => {
-        $nav.addClass('open')
-      }, 100)
-      let smalltopH = allH.filter(item => _position(item, true).top >= 0)[0];
-      smalltopH ? null : smalltopH = allH[allH.length - 1]
-      if (smalltopH) {
-        let cuLi = allLi.find(item => item.getAttribute('data-id') === smalltopH.id)
-        if (cuLi) {
-          cuLi.classList.add('open')
-          $nav.animate({
-            scrollTop: nav.scrollTop + _position(cuLi, true).top - navwrap.clientHeight / 4
+    $showDir.on('click', () => {
+      $navwrap.addClass('open');
+      hdNavActive()
+    })
+    function hdNavActive() {
+      if (!$navwrap.hasClass('open')) return
+      $allLi.removeClass('open')
+      let $smalltopH = $allH.filter((_, item) => _position(item, true).top >= 0).eq(0);
+      $smalltopH.length > 0 ? null : $smalltopH = $allH.last()
+      if ($smalltopH.length > 0) {
+        let $cuLi = $allLi.filter((_, item) => $(item).attr('data-id') === $smalltopH[0].id).eq(0)
+        if ($cuLi.length > 0) {
+          $cuLi.addClass('open')
+          $dirBox.stop().animate({
+            scrollTop: $dirBox.scrollTop() + _position($cuLi[0], true).top - $navwrap.height() / 4
           }, _speed)
         }
       }
-    })
+    }
+    $box.on('scroll', debounce(hdNavActive, 200))
   }
 }()
 

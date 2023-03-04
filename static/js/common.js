@@ -517,16 +517,16 @@ function _mySlide(options) {
     }
     if (Math.abs(spanX) > Math.abs(spanY)) {
       //水平方向滑动
-      if (spanX > 60) {
+      if (spanX > 30) {
         right && right(e);
-      } else if (spanX < -60) {
+      } else if (spanX < -30) {
         left && left(e);
       }
     } else {
       //垂直方向滑动
-      if (spanY > 60) {
+      if (spanY > 30) {
         down && down(e);
-      } else if (spanY < -60) {
+      } else if (spanY < -30) {
         up && up(e);
       }
     }

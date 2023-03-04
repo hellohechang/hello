@@ -240,7 +240,6 @@ pre code:hover+.codeCopy {
 }
 
 .notebotlist .showDir {
-  display: none;
   font-size: 28px;
 }
 
@@ -266,39 +265,51 @@ body {
 }
 
 .navwrap {
-  display: none;
-  width: 100%;
-  height: 100%;
   position: fixed;
   top: 0;
-  left: 0;
+  right: 0;
   z-index: 8;
-}
-
-nav {
   transform: translateX(100%);
   width: 80%;
   max-width: 500px;
   height: 100%;
-  float: right;
-  overflow-y: auto;
   color: #e7f1ff;
   background-color: #6c6c6cee;
   opacity: 0;
   transition: .5s;
 }
 
-nav.open {
+.navwrap .navClose {
+  position: absolute;
+  font-size: 40px;
+  top: 20px;
+  width: 50px;
+  line-height: 50px;
+  text-align: center;
+  left: -60px;
+  height: 50px;
+  color: #aaa;
+}
+
+.navwrap .navClose:hover {
+  color: #FF9632;
+}
+
+.navwrap.open {
   transform: translateX(0);
   opacity: 1;
 }
 
-nav .dirBox {
+.navwrap .dirBox {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  box-sizing: border-box;
+  padding: 20px 4px;
   margin: 0;
-  padding: 4px;
 }
 
-nav .dirBox li {
+.navwrap .dirBox li {
   margin: 6px 0;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -306,37 +317,40 @@ nav .dirBox li {
   box-sizing: border-box;
   font-size: 16px;
   border-left: 4px solid transparent;
+  transition: .5s;
 }
 
-nav .dirBox li:hover {
-  border-left: 4px solid #FF9632;
+@media (min-width:800px) {
+  .navwrap .dirBox li:hover {
+    border-left: 4px solid #FF9632;
+  }
 }
 
-nav .dirBox li[h='1'] {
+.navwrap .dirBox li[h='1'] {
   padding-left: 1em;
 }
 
-nav .dirBox li[h='2'] {
+.navwrap .dirBox li[h='2'] {
   padding-left: 2em;
 }
 
-nav .dirBox li[h='3'] {
+.navwrap .dirBox li[h='3'] {
   padding-left: 3em;
 }
 
-nav .dirBox li[h='4'] {
+.navwrap .dirBox li[h='4'] {
   padding-left: 4em;
 }
 
-nav .dirBox li[h='5'] {
+.navwrap .dirBox li[h='5'] {
   padding-left: 5em;
 }
 
-nav .dirBox li[h='6'] {
+.navwrap .dirBox li[h='6'] {
   padding-left: 6em;
 }
 
-nav .dirBox li.open {
+.navwrap .dirBox li.open {
   color: #FF9632;
   border-left: 4px solid #FF9632;
 }
@@ -344,7 +358,7 @@ nav .dirBox li.open {
 .pageSearch .hpre:active,
 .pageSearch .hx:active,
 .pageSearch .hnext:active,
-nav .dirBox li:active,
+.navwrap .dirBox li:active,
 .markdownbox .from span:active,
 .notebotlist div:active {
   transition: 0s;

@@ -951,7 +951,6 @@ window.alert = function () {
 
     create() {
       let {
-        title,
         confirm,
         button
       } = this.options,
@@ -1002,7 +1001,7 @@ window.alert = function () {
 
       this._close = this.createEl(`
             position:  absolute;
-            right:  0px;
+            left:  0px;
             top:  0px;
             width:  40px;
             line-height:  40px;
@@ -1045,8 +1044,7 @@ window.alert = function () {
               background: #DDD;`,
         'button');
       //=>插入到页面中
-      this._title.innerText = title;
-      this._close.innerText = 'x';
+      this._close.className = 'iconfont icon-guanbi';
       this._close.setAttribute('cursor', '');
       this._header.appendChild(this._title);
       this._header.appendChild(this._close);
@@ -1059,8 +1057,8 @@ window.alert = function () {
         this._cancel.innerHTML = button.cancel;
         this._confirm.setAttribute('cursor', '');
         this._cancel.setAttribute('cursor', '');
-        this._footer.appendChild(this._confirm);
         this._footer.appendChild(this._cancel);
+        this._footer.appendChild(this._confirm);
         this._main.appendChild(this._footer);
       }
 
@@ -1172,7 +1170,6 @@ window.alert = function () {
   }
   return function anonymous(content = '', options = {}) {
     let _default = {
-      title: '系统提示',
       button: {
         confirm: '确认',
         cancel: '取消'

@@ -80,8 +80,10 @@ pre .codeCopy {
 }
 
 pre .shrink {
-  color: #ccc;
-  font-weight: bold;
+  color: #aaa;
+  font-weight: 700;
+  width: 30px;
+  line-height: 30px;
 }
 
 pre .shrink:hover,

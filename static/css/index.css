@@ -2679,8 +2679,8 @@ body {
 
 .addsqcd {
   float: right;
-  font-size: 20px;
-  margin: 5px 15px 100px 0;
+  font-size: 24px;
+  margin: 10px 15px 100px 0;
   color: rgb(20, 194, 218);
   font-weight: bold;
 }

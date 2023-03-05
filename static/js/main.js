@@ -606,9 +606,7 @@
       id = $this.attr('data-id');
     $menubtnid.activeId = id;
     if ($this.attr('flag') === 'on') {
-      $this.next().slideUp(_speed, () => {
-        $this.next().html('')
-      });
+      $this.next().slideUp(_speed).html('');
       $menubtnid.activeId = 'hide';
       $this.attr('flag', 'off')
       return
@@ -625,7 +623,7 @@
           <div class="suqname">${name}</div>
           </li>`;
       })
-      $(".blockquote").attr('flag', 'off').next().css('display', 'none').html('');
+      $(".blockquote").attr('flag', 'off').next().slideUp(_speed).html('');
       $this.attr('flag', 'on').next().html(str).slideDown(_speed, () => {
         $menuitem.stop().animate({
           scrollTop: _position($this[0]).top + $menuitem[0].scrollTop - 5

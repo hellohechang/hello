@@ -3382,6 +3382,7 @@
   function musicsea() {
     let a = $musictextid.val().trim();
     if (a !== "") {
+      $searchlistwrap.fadeIn(_speed);
       _getAjax('/player/search', { a }).then(result => {
         if (parseInt(result.code) === 0) {
           if ($mmlistid.is(':hidden')) return;
@@ -3401,10 +3402,8 @@
               num++;
             });
             $msearchlistid.html(str);
-            $searchlistwrap.fadeIn(_speed);
           } else {
-            $searchlistwrap.fadeOut(_speed);
-            $msearchlistid.html('');
+            $msearchlistid.html('<p style="padding: 20px 0;text-align: center;pointer-events: none;">没有找到歌曲~</p>');
           }
           return;
         }

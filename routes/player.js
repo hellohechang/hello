@@ -117,6 +117,9 @@ route.get('/search', async (req, res) => {
         let name = v.artist + v.name;
         return name.toLowerCase().includes(a.toLowerCase())
       })
+      if (ar.length === 0) {
+        await writelog(req, `未搜索到歌曲[${a}]`)
+      }
     }
     _success(res, 'ok', ar.slice(0, 100));
   } catch (error) {

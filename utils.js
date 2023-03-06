@@ -53,6 +53,7 @@ function _writeFile(path, data) {
   });
 }
 function _readdir(path) {
+  if (!fs.existsSync(path)) return [];
   return new Promise((resolve, reject) => {
     fs.readdir(path, (err, result) => {
       if (err) {

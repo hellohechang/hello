@@ -2214,7 +2214,6 @@ function downloadFile(url, fileName) {
 }
 // 预览图片
 function imgPreview(u1, u2) {
-  let isClose = null
   let num = 0
   let box = document.createElement('div')
   box.style.cssText = `
@@ -2269,20 +2268,18 @@ function imgPreview(u1, u2) {
   if (u2) {
     imgjz(u2, () => {
       img.src = u2
+    }, () => {
+      _err('图片加载失败~')
+      close()
     })
   }
-  box.addEventListener('transitionend', function load() {
-    if (isClose) {
-      box.removeEventListener('transitionend', load)
-      box.remove()
-    } else {
-      imgjz(u1, () => {
-        if (isClose) return;
-        _loadingBar.end()
-        img.src = u1
-        zoomBox.style.display = 'block'
-      })
-    }
+  imgjz(u1, () => {
+    _loadingBar.end()
+    img.src = u1
+    zoomBox.style.display = 'block'
+  }, () => {
+    _err('图片加载失败~')
+    close()
   })
   let imgW = 0
   let imgH = 0
@@ -2295,8 +2292,7 @@ function imgPreview(u1, u2) {
     box.scrollTop = top + (ih - imgH) / 2
     box.scrollLeft = left + (iw - imgW) / 2
   }
-
-  box.addEventListener('click', function hdClick(e) {
+  function hdClick(e) {
     imgW = img.clientWidth
     imgH = img.clientHeight
     num = imgW
@@ -2314,11 +2310,17 @@ function imgPreview(u1, u2) {
       img.style.width = `${num}px`
       hdScroll()
     } else {
-      isClose = true
-      box.removeEventListener('click', hdClick)
-      _loadingBar.end()
-      box.style.transition = '.5s'
-      box.style.opacity = 0
+      close()
     }
-  })
+  }
+  box.addEventListener('click', hdClick)
+  function close() {
+    box.removeEventListener('click', hdClick)
+    _loadingBar.end()
+    box.style.transition = '.5s'
+    box.style.opacity = 0
+    _setTimeout(() => {
+      box.remove()
+    }, 500)
+  }
 }

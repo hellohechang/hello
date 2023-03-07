@@ -338,6 +338,7 @@ body {
   box-sizing: border-box;
   padding: 8px;
   background-color: transparent;
+  border-radius: 2px;
 }
 
 .mtc .mtcinp input:focus,

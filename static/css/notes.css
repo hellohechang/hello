@@ -23,19 +23,6 @@ body:before {
   background-size: cover;
 }
 
-.box {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  overflow-y: scroll;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-
-.box::-webkit-scrollbar {
-  display: none;
-}
-
 .mbg {
   position: fixed;
   top: 0;
@@ -74,25 +61,31 @@ body:before {
 }
 
 .toplist .topcenter input {
-  margin: auto 5%;
+  margin: 0 10px;
   width: 0;
   text-align: center;
+  max-width: 200px;
   flex: auto;
   border: none;
   outline: none;
-  background-color: #9d96968a;
+  background-color: #d9d6d68a;
   height: 40px;
-  font-size: 24px;
+  font-size: 18px;
+  transition: .5s;
+  border-radius: 4px;
 }
 
 .toplist .topcenter input:focus {
-  background-color: #fff
+  background-color: #ffffffa8;
+  max-width: 400px;
 }
 
 .toplist .topcenter .addnote,
 .toplist .topcenter .pagenote {
   flex: none;
-  width: 50px;
+  margin: 0 10px;
+  width: 40px;
+  height: 40px;
   font-size: 40px;
   color: #7a7e7e;
 }
@@ -127,7 +120,8 @@ body:before {
   padding: 10px 0;
   font-size: 18px;
   background-color: rgba(248, 245, 245, .836);
-  margin-bottom: 1px;
+  margin-bottom: 2px;
+  border-radius: 2px;
   overflow: hidden;
 }
 

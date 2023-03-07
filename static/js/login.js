@@ -55,7 +55,7 @@
       </div>
     </main>`;
     $body.append(str);
-    $('main').show(_speed);
+    $('main').stop().show(_speed);
     let $account = $('.account input'),
       $password = $('.password input'),
       $resetPass = $('.resetPass'),
@@ -81,9 +81,9 @@
           account,
           password: md5(password),
         };
-        $loadingBox.fadeIn()
+        $loadingBox.stop().fadeIn()
         _postAjax("/user/login", npd).then((result) => {
-          $loadingBox.fadeOut()
+          $loadingBox.stop().fadeOut()
           if (parseInt(result.code) === 0) {
             _setData("account", npd.account);
             alert(result.codeText, {
@@ -93,7 +93,7 @@
             })
           }
         }).catch(_ => {
-          $loadingBox.fadeOut()
+          $loadingBox.stop().fadeOut()
         })
       }, function () {
         _err('验证失败')
@@ -151,7 +151,7 @@
       </div>
       </main>`;
     $body.append(str);
-    $('main').show(_speed);
+    $('main').stop().show(_speed);
     let $email = $('.email input'),
       $code = $('.code input'),
       $codebtn = $('.code button'),
@@ -178,19 +178,19 @@
       if (!checkUserEmail() || !checkCode() || !checkPassword()) return;
       validateImg.init(function () {
         _flag = true
-        $loadingBox.fadeIn()
+        $loadingBox.stop().fadeIn()
         _postAjax('/user/resetpass', {
           code,
           password: md5(password),
           email
         }).then(result => {
-          $loadingBox.fadeOut()
+          $loadingBox.stop().fadeOut()
           if (parseInt(result.code) === 0) {
             _success(result.codeText);
             handleLogin();
           }
         }).catch(_ => {
-          $loadingBox.fadeOut()
+          $loadingBox.stop().fadeOut()
         })
       }, function () {
         _err('验证失败')
@@ -202,9 +202,9 @@
         $this = $(this),
         email = $email.val().trim();
       $this.addClass('active');
-      $loadingBox.fadeIn()
+      $loadingBox.stop().fadeIn()
       _getAjax('/user/resetpasscode', { email }).then(result => {
-        $loadingBox.fadeOut()
+        $loadingBox.stop().fadeOut()
         if (parseInt(result.code) === 0) {
           _success(result.codeText);
           function fun() {
@@ -222,7 +222,7 @@
         }
         $this.removeClass('active');
       }).catch(_ => {
-        $loadingBox.fadeOut()
+        $loadingBox.stop().fadeOut()
       })
     }, 500, true));
     $resetPass.click(() => {
@@ -305,7 +305,7 @@
       </div>
     </main>`;
     $body.append(str);
-    $('main').show(_speed);
+    $('main').stop().show(_speed);
     let $username = $('.username input'),
       $pusername = $('.pusername'),
       $email = $('.email input'),
@@ -342,9 +342,9 @@
           email,
           code
         };
-        $loadingBox.fadeIn()
+        $loadingBox.stop().fadeIn()
         _postAjax("/user/register", npd).then((result) => {
-          $loadingBox.fadeOut()
+          $loadingBox.stop().fadeOut()
           if (parseInt(result.code) === 0) {
             _setData('account', npd.email)
             alert(result.codeText, {
@@ -354,7 +354,7 @@
             })
           }
         }).catch(_ => {
-          $loadingBox.fadeOut()
+          $loadingBox.stop().fadeOut()
         })
       }, function () {
         _err('验证失败')
@@ -380,9 +380,9 @@
         $this = $(this),
         email = $email.val().trim();
       $this.addClass('active');
-      $loadingBox.fadeIn()
+      $loadingBox.stop().fadeIn()
       _getAjax('/user/registercode', { email }).then(result => {
-        $loadingBox.fadeOut()
+        $loadingBox.stop().fadeOut()
         if (parseInt(result.code) === 0) {
           _success(result.codeText);
           function fun() {
@@ -400,7 +400,7 @@
         }
         $this.removeClass('active');
       }).catch(_ => {
-        $loadingBox.fadeOut()
+        $loadingBox.stop().fadeOut()
       })
     }, 500, true));
     $username.on('blur', checkUserName);
@@ -488,7 +488,7 @@
         </div>
       </main>`;
     $body.append(str);
-    $('main').show(_speed);
+    $('main').stop().show(_speed);
     let $password = $('.password input'),
       $password1 = $('.password1 input'),
       $password2 = $('.password2 input'),
@@ -510,19 +510,19 @@
       if (!checkPassword()) return;
       validateImg.init(function () {
         _flag = true
-        $loadingBox.fadeIn()
+        $loadingBox.stop().fadeIn()
         _postAjax("/user/changepass", {
           oldpassword: md5(password),
           newpassword: md5(password1),
         }).then((result) => {
-          $loadingBox.fadeOut()
+          $loadingBox.stop().fadeOut()
           if (parseInt(result.code) === 0) {
             _success('修改密码成功，请重新登录账号~');
             handleLogin();
             return;
           }
         }).catch(_ => {
-          $loadingBox.fadeOut()
+          $loadingBox.stop().fadeOut()
         })
       }, function () {
         _err('验证失败')

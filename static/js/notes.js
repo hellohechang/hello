@@ -1,10 +1,10 @@
 ~async function () {
   let $mbg = $('.mbg'),
-    $box = $('.box'),
     $toplist = $('.toplist'),
     $searchinput = $('.toplist').find('input'),
     $menu = $('.menu'),
     $footer = $('footer'),
+    $html = $(document.documentElement),
     $showpage = $(".showpage");
   let $icon = $("link[rel*='icon']")
   document.addEventListener("visibilitychange", async function () {
@@ -35,7 +35,9 @@
       str += `<ul style="pointer-events: none;height:20px;background-color: #ffffff5c;margin:6px" class="itemBox"></ul>`
     });
     $menu.html(str)
-    $box.scrollTop(0)
+    $html.stop().animate({
+      scrollTop: 0
+    }, _speed)
   }
   function renderlist(y) {
     if (y) {
@@ -79,9 +81,11 @@
         }
         $menu.html(str)
         $toplist._flag = false
-        $footer.fadeOut(_speed)
+        $footer.stop().slideUp(_speed)
         if (y) {
-          $box.scrollTop(0)
+          $html.stop().animate({
+            scrollTop: 0
+          }, _speed)
         }
       }
     })
@@ -182,7 +186,7 @@
         $menu.pagenum = val;
         renderlist(true)
       } else if (flag === 'gotop') {
-        $box.stop().animate({
+        $html.stop().animate({
           scrollTop: 0
         }, _speed)
       } else {
@@ -205,11 +209,11 @@
     if ($toplist._flag) {
       $itemBox.find('.check').css('display', 'none').attr('check', 'n').css('background-color', 'transparent')
       $toplist._flag = false
-      $footer.fadeOut(_speed)
+      $footer.stop().slideUp(_speed)
     } else {
       $itemBox.find('.check').css('display', 'block')
       $toplist._flag = true
-      $footer.fadeIn(_speed)
+      $footer.stop().slideDown(_speed)
     }
     $footer.find('span').attr({
       class: 'iconfont icon-xuanzeweixuanze',
@@ -288,12 +292,12 @@
     let $itemBox = $('.itemBox');
     $itemBox.find('.check').css('display', 'none').attr('check', 'n').css('background-color', 'transparent')
     $toplist._flag = false
-    $footer.fadeOut(_speed)
+    $footer.stop().slideUp(_speed)
   })
   ~function () {
     let p = 0, t = 0;
-    $box.on('scroll', throttle(function () {
-      p = $box.scrollTop()
+    window.addEventListener('scroll', throttle(function () {
+      p = document.documentElement.scrollTop
       if (p <= 200) {
         t = p
         $toplist.addClass('open')
@@ -335,7 +339,7 @@
     function makeCode(url) {
       qrcode.makeCode(encodeURI(url));
       $linkCheck.val(url);
-      $codewrap.fadeIn(_speed);
+      $codewrap.stop().fadeIn(_speed);
     }
     $linkCheck.focus(function () {
       this.select();
@@ -343,7 +347,7 @@
     $codewrap.click(function (e) {
       let $this = $(this);
       if (_getTarget(e, '.codewrap', 1)) {
-        $this.fadeOut(_speed)
+        $this.stop().fadeOut(_speed)
       }
     })
     window.makeCode = makeCode

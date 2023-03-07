@@ -1,7 +1,7 @@
 ~async function () {
     let $mbg = $('.mbg'),
-        $box = $('.box'),
         $toplist = $('.toplist'),
+        $html = $(document.documentElement),
         $searchinput = $('.toplist').find('input'),
         $menu = $('.menu'),
         $footer = $('footer'),
@@ -30,10 +30,14 @@
             str += `<ul style="pointer-events: none;height:20px;background-color: #ffffff5c;margin:6px" class="itemBox"></ul>`
         });
         $menu.html(str)
-        $box.scrollTop(0)
+        $html.stop().animate({
+            scrollTop: 0
+        }, _speed)
     }
     function renderlist(y) {
-        renderlistdefault()
+        if (y) {
+            renderlistdefault()
+        }
         let pagenum = $menu.pagenum,
             a = $searchinput.val().trim();
         pagenum ? null : pagenum = 1;
@@ -67,9 +71,11 @@
                 }
                 $menu.html(str)
                 $toplist._flag = false
-                $footer.fadeOut(_speed)
+                $footer.stop().slideUp(_speed)
                 if (y) {
-                    $box.scrollTop(0)
+                    $html.stop().animate({
+                        scrollTop: 0
+                    }, _speed)
                 }
             }
         })
@@ -146,7 +152,7 @@
                 $menu.pagenum = val;
                 renderlist(true)
             } else if (flag === 'gotop') {
-                $box.stop().animate({
+                $html.stop().animate({
                     scrollTop: 0
                 }, _speed)
             } else {
@@ -165,11 +171,11 @@
         if ($toplist._flag) {
             $itemBox.find('.check').css('display', 'none').attr('check', 'n').css('background-color', 'transparent')
             $toplist._flag = false
-            $footer.fadeOut(_speed)
+            $footer.stop().slideUp(_speed)
         } else {
             $itemBox.find('.check').css('display', 'block')
             $toplist._flag = true
-            $footer.fadeIn(_speed)
+            $footer.stop().slideDown(_speed)
         }
         $footer.find('span').attr({
             class: 'iconfont icon-xuanzeweixuanze',
@@ -212,7 +218,7 @@
         let $itemBox = $('.itemBox');
         $itemBox.find('.check').css('display', 'none').attr('check', 'n').css('background-color', 'transparent')
         $toplist._flag = false
-        $footer.fadeOut(_speed)
+        $footer.stop().slideUp(_speed)
     })
     $showpage.val(_getData('historyshowpage') || 80)
     $showpage.on('change', function () {
@@ -222,8 +228,8 @@
     })
     ~function () {
         let p = 0, t = 0;
-        $box.on('scroll', throttle(function () {
-            p = $box.scrollTop()
+        window.addEventListener('scroll', throttle(function () {
+            p = document.documentElement.scrollTop
             if (p <= 200) {
                 t = p
                 $toplist.addClass('open')

@@ -304,11 +304,10 @@ body {
 .search-box .homefootmenu {
   display: none;
   flex: none;
-  flex-flow: row wrap;
   width: 100%;
   padding: 5px 0;
   background-color: rgba(0, 0, 0, 0.1);
-  justify-content: center;
+  text-align: center;
   box-sizing: border-box;
 }
 
@@ -316,10 +315,12 @@ body {
   flex: none;
   color: #ccc;
   font-size: 20px;
+  display: inline-block;
   margin: 5px 10px;
   width: 25px;
   text-align: center;
   line-height: 25px;
+  height: 25px;
 }
 
 .search-box .homefootmenu button {
@@ -906,6 +907,7 @@ body {
   height: 30px;
   font-size: 16px;
   text-align: center;
+  border-radius: 2px;
 }
 
 .onoffbox #musictext:focus {
@@ -2033,6 +2035,7 @@ body {
   height: 30px;
   font-size: 16px;
   text-align: center;
+  border-radius: 2px;
 }
 
 
@@ -2151,6 +2154,7 @@ body {
   height: 30px;
   font-size: 16px;
   text-align: center;
+  border-radius: 2px;
 }
 
 .guestbooklisttop input:focus {
@@ -2602,6 +2606,7 @@ body {
   line-height: 20px;
   outline: none;
   -webkit-user-select: text;
+  border-radius: 2px;
 }
 
 .guestgo {
@@ -2713,7 +2718,6 @@ body {
   display: none;
   position: absolute;
   flex: none;
-  flex-flow: row wrap;
   width: 100%;
   bottom: 0;
   padding: 5px 0;
@@ -2724,12 +2728,14 @@ body {
 }
 
 #menu .footmenu div {
+  display: inline-block;
   flex: none;
   color: #ccc;
   font-size: 20px;
   margin: 5px 5px 5px 10px;
   text-align: center;
   width: 25px;
+  height: 25px;
   line-height: 25px;
 }
 

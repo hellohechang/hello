@@ -109,13 +109,13 @@
                 'data-flag': 'n',
                 class: 'shrink iconfont icon-page-next'
             })
-            $this.parent().find('code').hide()
+            $this.parent().find('code').stop().stop().hide()
         } else {
             $this.attr({
                 'data-flag': 'y',
                 class: 'shrink iconfont icon-Down'
             })
-            $this.parent().find('code').show()
+            $this.parent().find('code').stop().show()
         }
     }, 500, true)).on('click', 'img', function () {
         imgPreview($(this).attr('src'))
@@ -154,17 +154,17 @@
         if ($sloseShow._flag === 'y') {
             $sloseShow._flag = 'n'
             $sloseShow.attr('class', 'sloseShow iconfont icon-yanjing_yincang_o')
-            $showBox.hide()
+            $showBox.stop().hide()
             $codeBox.addClass('open')
-            $fullScreenShow.hide()
+            $fullScreenShow.stop().hide()
         } else {
             $sloseShow._flag = 'y'
             $sloseShow.attr('class', 'sloseShow iconfont icon-yanjing_xianshi_o')
-            $showBox.show()
+            $showBox.stop().show()
             $codeBox.removeClass('open')
-            $fullScreenShow.show()
+            $fullScreenShow.stop().show()
         }
-        $codeBox.show()
+        $codeBox.stop().show()
     })
     $fullScreenShow.click(function () {
         $codeBox.toggle()
@@ -172,7 +172,7 @@
     $save.click(throttle(saveNote, 1000))
     let $nav = $navwrap.find('nav')
     $textData.click(function () {
-        $navwrap.fadeIn(0, () => {
+        $navwrap.stop().fadeIn(0, () => {
             $nav.addClass('open')
         })
         let local = _getData('md') || [],
@@ -202,7 +202,7 @@
         if (_getTarget(e, '.navwrap', 1)) {
             $nav.removeClass('open')
             _setTimeout(() => {
-                $navwrap.fadeOut(0)
+                $navwrap.stop().fadeOut(0)
             }, 500)
         }
     }).on('click', '.textname', function () {

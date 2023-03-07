@@ -300,7 +300,7 @@
     $userinfoclose = $userinfobox.find('.userinfoclose');
   let mytitle = 'Hello';
   function loadingdh() {
-    $onloading.html('').fadeOut(_speed, () => {
+    $onloading.html('').stop().fadeOut(_speed, () => {
       $onloading.remove()
     });
   }
@@ -334,7 +334,7 @@
           if (y) {
             $img.css('display', 'block');
           } else {
-            $img.stop().fadeIn(_speed);
+            $img.stop().stop().fadeIn(_speed);
           }
           $imgbg.css('background', 'none');
         })
@@ -370,23 +370,23 @@
     function makeCode(url) {
       qrcode.makeCode(encodeURI(url));
       $linkCheck.val(url);
-      $codewrap.fadeIn(_speed);
+      $codewrap.stop().fadeIn(_speed);
     }
     $linkCheck.focus(function () {
       this.select();
     });
     $codewrap.click(function (e) {
       if (_getTarget(e, '.codewrap', 1)) {
-        $codewrap.fadeOut(_speed)
+        $codewrap.stop().fadeOut(_speed)
       }
     })
     window.makeCode = makeCode
   }();
   _getAjax("/chat/getnews", { a: 3 }).then((result) => {
     if (parseInt(result.code) === 0) {
-      $newly.fadeOut(_speed);
+      $newly.stop().fadeOut(_speed);
     } else {
-      $newly.fadeIn(_speed);
+      $newly.stop().fadeIn(_speed);
     }
   });
   _getAjax("/user/renewal")
@@ -400,7 +400,7 @@
       if (_userinfo.account !== 'root') {
         $logon.remove()
       }
-      $usermin.text(_userinfo.username).attr("title", _userinfo.username).fadeIn(_speed);
+      $usermin.text(_userinfo.username).attr("title", _userinfo.username).stop().fadeIn(_speed);
       _success(`Welcome ${_userinfo.username}`);
       $dltx.css("background-image", `url(${mediaURL}/logo/${_userinfo.account}/${_userinfo.account}.png?v=${Math.random()})`);
 
@@ -544,7 +544,7 @@
   }
   function rendernav() {
     if ($navwrap.is(':hidden')) return
-    $footmenu.css('display', 'none').find('div').attr({
+    $footmenu.stop().slideUp(_speed).find('div').attr({
       class: 'iconfont icon-xuanzeweixuanze',
       check: 'n'
     });
@@ -598,7 +598,7 @@
   //侧边导航缩放
   let checkColor = 'rgb(118 254 89 / 58%)'
   $menuid.on("click", ".blockquote", function () {
-    $footmenu.css('display', 'none').find('div').attr({
+    $footmenu.stop().slideUp(_speed).find('div').attr({
       class: 'iconfont icon-xuanzeweixuanze',
       check: 'n'
     });
@@ -606,7 +606,7 @@
       id = $this.attr('data-id');
     $menubtnid.activeId = id;
     if ($this.attr('flag') === 'on') {
-      $this.next().slideUp(_speed).html('');
+      $this.next().stop().slideUp(_speed).html('');
       $menubtnid.activeId = 'hide';
       $this.attr('flag', 'off')
       return
@@ -623,8 +623,8 @@
           <div class="suqname">${name}</div>
           </li>`;
       })
-      $(".blockquote").attr('flag', 'off').next().slideUp(_speed).html('');
-      $this.attr('flag', 'on').next().html(str).slideDown(_speed, () => {
+      $(".blockquote").attr('flag', 'off').next().stop().slideUp(_speed).html('');
+      $this.attr('flag', 'on').next().html(str).stop().slideDown(_speed, () => {
         $menuitem.stop().animate({
           scrollTop: _position($this[0]).top + $menuitem[0].scrollTop - 5
         }, _speed)
@@ -787,8 +787,8 @@
     }, 1000, true))
   }).on('click', '.closesq', function (e) {
     let $sidenav = $('.sidenav-btn');
-    $sidenav.find('.seleckbook').fadeOut(_speed).attr('check', 'n').css('background-color', 'transparent')
-    $footmenu.css('display', 'none')
+    $sidenav.find('.seleckbook').stop().fadeOut(_speed).attr('check', 'n').css('background-color', 'transparent')
+    $footmenu.stop().slideUp(_speed)
   })
   if (isios()) {
     $menuid[0]._longPress('.blockquote', function (e) {
@@ -972,12 +972,12 @@
           };
         });
       } else if (_getTarget(e, '.mtcitem2')) {//多选
-        $footmenu.css('display', 'flex').find('div').attr({
+        $footmenu.stop().slideDown(_speed).find('div').attr({
           class: 'iconfont icon-xuanzeweixuanze',
           check: 'n'
         });
         let $sidenav = $('.sidenav-btn');
-        $sidenav.find('.seleckbook').fadeIn(_speed);
+        $sidenav.find('.seleckbook').stop().fadeIn(_speed);
         rightMenu.close()
       } else if (_getTarget(e, '.mtcitem3')) {// 修改书签
         let str = `<div class="mtcinp">
@@ -1106,7 +1106,7 @@
     $boxtop.removeClass("boxtopp");
     $boxdow.removeClass("boxdoww");
     $boxcon.css("opacity", "1");
-    $navwrap.fadeOut(_speed, () => {
+    $navwrap.stop().fadeOut(_speed, () => {
       $menuitem.html('');
     })
   }
@@ -1118,8 +1118,8 @@
   $searchbox.click(function (e) {
     if (_getTarget(e, '.search-box', 1)) {
       $folderulid.html('');
-      $searchbox.hide(_speed);
-      $searchboxon.show(_speed);
+      $searchbox.stop().hide(_speed);
+      $searchboxon.stop().show(_speed);
       $bgmain.removeClass("sce");
     }
   })
@@ -1184,7 +1184,7 @@
   }
   function renderhomebook() {
     if ($searchbox.is(':hidden')) return;
-    $homefootmenu.css('display', 'none').find('div').attr({
+    $homefootmenu.stop().slideUp(_speed).find('div').attr({
       class: 'iconfont icon-xuanzeweixuanze',
       check: 'n'
     });
@@ -1380,8 +1380,8 @@
     }, 1000, true))
   }).on('click', '.closesq', function (e) {
     let $sidenav = $('.folder-item');
-    $sidenav.find('.celeckhomesq').fadeOut(_speed).attr('check', 'n').css('background-color', 'transparent')
-    $homefootmenu.css('display', 'none')
+    $sidenav.find('.celeckhomesq').stop().fadeOut(_speed).attr('check', 'n').css('background-color', 'transparent')
+    $homefootmenu.stop().slideUp(_speed)
   })
   if (isios()) {
     $searchbox[0]._longPress('.folder-item-box', function (e) {
@@ -1470,12 +1470,12 @@
           };
         });
       } else if (_getTarget(e, '.mtcitem2')) {//批量操作
-        $homefootmenu.css('display', 'flex').find('div').attr({
+        $homefootmenu.stop().slideDown(_speed).find('div').attr({
           class: 'iconfont icon-xuanzeweixuanze',
           check: 'n'
         });
         let $sidenav = $('.folder-item');
-        $sidenav.find('.celeckhomesq').fadeIn(_speed);
+        $sidenav.find('.celeckhomesq').stop().fadeIn(_speed);
         rightMenu.close()
       } else if (_getTarget(e, '.mtcitem3')) { //编辑书签
         let str = `<div class="mtcinp">
@@ -1572,11 +1572,11 @@
   }
 
   $searchboxon.click(function (e) {
-    $searchbox.show(_speed, () => {
+    $searchbox.stop().show(_speed, () => {
       renderHomebook()
     });
     setZindex($searchbox);
-    $(this).hide(_speed);
+    $(this).stop().hide(_speed);
     $bgmain.addClass("sce");
     $state.addClass("statem");
   });
@@ -1716,7 +1716,7 @@
     }
   }, 1000));
   $inputTextid.focus(function () {
-    $searchlistid.fadeIn(_speed);
+    $searchlistid.stop().fadeIn(_speed);
     let val = this.value.trim();
     if (val === "") {
       _getAjax('/search/getsearchdata').then(result => {
@@ -1769,7 +1769,7 @@
     let x = $(this).parent().attr("ssid");
     _postAjax('/search/del', { arr: [x] }).then(result => {
       if (parseInt(result.code) === 0) {
-        $(this).parent().slideUp(_speed);
+        $(this).parent().stop().slideUp(_speed);
         return;
       }
     });
@@ -2048,7 +2048,7 @@
       if (_getTarget(e, '.mtcitem')) {
         let bgflag = dmwidth > 800 ? 'bg' : 'bgxs',
           xx = `${mediaURL}/bg/${bgflag}/${url}`;
-        $allbgwrap.fadeOut(_speed, () => {
+        $allbgwrap.stop().fadeOut(_speed, () => {
           $allbg.html('')
         });
         $xzbg.find('img').addClass('open');
@@ -2201,15 +2201,15 @@
           "background-image": `url(${$img.attr("data-src")})`
         });
         imgjz($img.attr("data-src"), () => {
-          $img.fadeIn(_speed);
+          $img.stop().fadeIn(_speed);
         });
       }
     });
   }
   function openbgku() {
     $youtop.removeClass('open');
-    $youtopwrap.fadeOut(_speed)
-    $allbgwrap.slideDown(_speed, () => {
+    $youtopwrap.stop().fadeOut(_speed)
+    $allbgwrap.stop().slideDown(_speed, () => {
       bgxuanran(true);
     });
     setZindex($allbgwrap);
@@ -2228,10 +2228,10 @@
           if (_getTarget(e, '.mtcitem')) {
             rightMenu.close()
             handleUserinfo();
-            $userinfobox.fadeIn(_speed);
+            $userinfobox.stop().fadeIn(_speed);
             setZindex($userinfobox)
             $youtop.removeClass('open');
-            $youtopwrap.fadeOut(_speed)
+            $youtopwrap.stop().fadeOut(_speed)
           } else if (_getTarget(e, '.mtcitem1')) {
             if (_userinfo.account === 'test') {
               _err('测试账号不让修改密码~')
@@ -2385,7 +2385,7 @@
   }, 500));
 
   $allbgoff.click(function () {
-    $allbgwrap.fadeOut(_speed, () => {
+    $allbgwrap.stop().fadeOut(_speed, () => {
       $allbg.html('');
     });
   });
@@ -2663,9 +2663,9 @@
         $myAudio[0]._rod = rod
         let hasfy = !rod.every(item => item.fy === '');
         if (hasfy) {
-          $lrcfyon.show(_speed);
+          $lrcfyon.stop().show(_speed);
         } else {
-          $lrcfyon.hide(_speed);
+          $lrcfyon.stop().hide(_speed);
         }
         let str = '';
         rod.forEach(item => {
@@ -2921,7 +2921,7 @@
           $editlrc.find('.save').remove()
         }
         setZindex($editlrc);
-        $editlrc.fadeIn(_speed, () => {
+        $editlrc.stop().fadeIn(_speed, () => {
           $editlrc.css('display', 'flex').find('textarea').val('')
           $editlrc._mobj = deepClone(musicobj);
           _getAjax('/player/getlrc', { name: musicobj.name, artist: musicobj.artist }).then(result => {
@@ -2945,9 +2945,9 @@
     }
   })
   $editlrc.on('click', '.close', function () {
-    $editlrc.fadeOut(_speed)
+    $editlrc.stop().fadeOut(_speed)
   }).on('click', '.lrcClose', function () {
-    $editlrc.fadeOut(_speed)
+    $editlrc.stop().fadeOut(_speed)
   }).on('click', '.save', function () {
     let val = $editlrc.find('textarea').val();
     if ($editlrc._val === val) return;
@@ -3107,13 +3107,13 @@
       audioPlay();
       // mv图标
       if (musicobj.mv == "y") {
-        $mvpid.show(_speed);
+        $mvpid.stop().show(_speed);
       } else {
-        $mvpid.hide(_speed);
+        $mvpid.stop().hide(_speed);
       }
       if (!$musicmv.is(":hidden")) {
         videoPause();
-        $musicmv.fadeOut(_speed)
+        $musicmv.stop().fadeOut(_speed)
       }
       delete obj.pic
       delete obj.url
@@ -3160,8 +3160,8 @@
   }
   $ksbfxsid.click(function (e) {
     defaultdqplaying()
-    $playingwrap.fadeIn(100, () => {
-      $playingwrap.find('.playinglist').slideDown(_speed, () => {
+    $playingwrap.stop().fadeIn(100, () => {
+      $playingwrap.find('.playinglist').stop().slideDown(_speed, () => {
         dqplaying();
         gaolianging(true);
       });
@@ -3258,15 +3258,15 @@
   $playingwrap.click(function (e) {
     if (_getTarget(e, '.playingwrap', 1)) {
       $playingbot.html('')
-      $playingwrap.find('.playinglist').slideUp(_speed, () => {
-        $playingwrap.fadeOut(100)
+      $playingwrap.find('.playinglist').stop().slideUp(_speed, () => {
+        $playingwrap.stop().fadeOut(100)
       });
     }
   });
   // 音乐返回按钮
   $mmlistsxid.click(function (e) {
     if (!$searchlistwrap.is(":hidden")) {
-      $searchlistwrap.fadeOut(_speed);
+      $searchlistwrap.stop().fadeOut(_speed);
       $musictextid.val("");
     } else if ($musiclrc.css("transform") === "none") {
       $lrcdownid.click();
@@ -3279,7 +3279,7 @@
       $gedantname.css('opacity', 0);
     } else if (!$mmlistid.is(':hidden')) {
       if (dmwidth < 800) {
-        $mmlistid.fadeOut(_speed, () => {
+        $mmlistid.stop().fadeOut(_speed, () => {
           $mmmlist.children('.mmmitemwrap').html('');
           $mmlist.children('.mmitemwrap').html('');
         })
@@ -3290,28 +3290,28 @@
   });
   $mmlistoff.click(function (e) {
     if (dmwidth > 800) {
-      $mmlistid.fadeOut(_speed, () => {
+      $mmlistid.stop().fadeOut(_speed, () => {
         $mmmlist.children('.mmmitemwrap').html('');
         $mmlist.children('.mmitemwrap').html('');
       })
     }
-    $musicmv.fadeOut(_speed);
-    $musichide.hide(_speed);
-    $lrcbotwrap.fadeOut(_speed);
+    $musicmv.stop().fadeOut(_speed);
+    $musichide.stop().hide(_speed);
+    $lrcbotwrap.stop().fadeOut(_speed);
     audioPause();
     videoPause();
   });
 
   $mmlisthide.click(function () {
     if (dmwidth > 800) {
-      $musichide.show(_speed);
+      $musichide.stop().show(_speed);
       setZindex($musichide)
-      $mmlistid.fadeOut(_speed, () => {
+      $mmlistid.stop().fadeOut(_speed, () => {
         $mmmlist.children('.mmmitemwrap').html('');
         $mmlist.children('.mmitemwrap').html('');
       })
       if (!$lrcbotwrap._isone) {
-        $lrcbotwrap.fadeIn(_speed);
+        $lrcbotwrap.stop().fadeIn(_speed);
         setZindex($lrcbotwrap)
       }
     }
@@ -3348,14 +3348,14 @@
         savesearcharr(val);
       }
       $inputTextid.val('');
-      $searchlistid.fadeOut(_speed);
+      $searchlistid.stop().fadeOut(_speed);
     }
   });
   //本地音乐搜索
   $musictextid.on("input", function () {
     let a = $musictextid.val().trim();
     if (a === '') {
-      $searchlistwrap.fadeOut(_speed);
+      $searchlistwrap.stop().fadeOut(_speed);
       $msearchlistid.html('');
     } else {
       _musicsea()
@@ -3382,7 +3382,7 @@
   function musicsea() {
     let a = $musictextid.val().trim();
     if (a !== "") {
-      $searchlistwrap.fadeIn(_speed);
+      $searchlistwrap.stop().fadeIn(_speed);
       _getAjax('/player/search', { a }).then(result => {
         if (parseInt(result.code) === 0) {
           if ($mmlistid.is(':hidden')) return;
@@ -3412,7 +3412,7 @@
   }
   $searchlistwrap.click(function (e) {
     if (_getTarget(e, '.searchlistwrap', 1)) {
-      $searchlistwrap.fadeOut(_speed);
+      $searchlistwrap.stop().fadeOut(_speed);
       $msearchlistid.html('');
       $musictextid.val('')
     }
@@ -3688,11 +3688,11 @@
   $musicimgid.click(function () {
     $musiclrc.addClass("musiclrchh");
     handleLrc()
-    $lrcdownid.fadeIn(_speed);
+    $lrcdownid.stop().fadeIn(_speed);
     if (musicobj && musicobj.mv == "y") {
-      $mvpid.show(_speed);
+      $mvpid.stop().show(_speed);
     } else {
-      $mvpid.hide(_speed);
+      $mvpid.stop().hide(_speed);
     }
     if (_music && musicobj && _music[1].item.some((v) => v.name + v.artist === musicobj.name + musicobj.artist)
     ) {
@@ -4222,12 +4222,12 @@
     let $qxcz = $(".qxcz"),
       $duoxuan = $(".duoxuan");
     if ($mmmlist._duoxuan) {
-      $qxcz.fadeOut(_speed);
-      $duoxuan.fadeOut(_speed);
+      $qxcz.stop().fadeOut(_speed);
+      $duoxuan.stop().fadeOut(_speed);
       $mmmlist._duoxuan = false
     } else {
-      $qxcz.fadeIn(_speed);
-      $duoxuan.fadeIn(_speed);
+      $qxcz.stop().fadeIn(_speed);
+      $duoxuan.stop().fadeIn(_speed);
       $mmmlist._duoxuan = true
     }
     $duoxuan.attr("check", 'n').css('background-color', 'transparent');
@@ -4669,9 +4669,9 @@
         return $item.attr('xa') + $item.attr('xn') === musicobj.artist + musicobj.name;
       });
       if (ii < 0) {
-        $("#mmcon").hide(_speed);
+        $("#mmcon").stop().hide(_speed);
       } else {
-        $("#mmcon").show(_speed);
+        $("#mmcon").stop().show(_speed);
         if (a) {
           let sp = $mmmlist.scrollTop() + $songlist.eq(ii).position().top - 100
           $mmmlist.stop().animate({
@@ -4690,7 +4690,7 @@
   //MV
   $mvoff.click(function (e) {
     videoPause();
-    $musicmv.fadeOut(_speed);
+    $musicmv.stop().fadeOut(_speed);
   });
   $mvoffxs.click(function (e) {
     $mvoff.click()
@@ -4702,7 +4702,7 @@
   });
 
   $lrcbotoff.click(function () {
-    $lrcbotwrap.fadeOut(_speed)._isone = true;
+    $lrcbotwrap.stop().fadeOut(_speed)._isone = true;
   });
 
   //MV播放函数
@@ -4712,7 +4712,7 @@
     audioPause();
     $myVideo.attr("src", `${musicobj.murl}`);
     videoPlay();
-    $musicmv.fadeIn(_speed);
+    $musicmv.stop().fadeIn(_speed);
     setZindex($musicmv)
     gaoliang(false);
     delete obj.pic
@@ -4837,38 +4837,38 @@
 
   $onlinenote.click(debounce(function () {
     $youtop.removeClass('open');
-    $youtopwrap.fadeOut(_speed)
+    $youtopwrap.stop().fadeOut(_speed)
     openIframe(`/page/notes/`, 'Notes');
   }, 1000, true));
   $shareList.click(debounce(function () {
     $youtop.removeClass('open');
-    $youtopwrap.fadeOut(_speed)
+    $youtopwrap.stop().fadeOut(_speed)
     openIframe(`/page/sharelist/`, 'Sharelist');
   }, 1000, true));
   $openplayer.click(debounce(function () {
     $youtop.removeClass('open');
-    $youtopwrap.fadeOut(_speed)
+    $youtopwrap.stop().fadeOut(_speed)
     if (!$openplayer._mflag) {
       zidonghide(10, ".musiclrc", ".musicbox", debounce(function () {
-        $musicbox.slideDown(_speed, () => {
+        $musicbox.stop().slideDown(_speed, () => {
           $musicbox._flag = 'y'
           handleLrc()
         })
       }, 500, true), debounce(function () {
-        $musicbox.slideUp(_speed, () => {
+        $musicbox.stop().slideUp(_speed, () => {
           $musicbox._flag = 'n'
           handleLrc()
         })
       }, 500, true), '.tianc');
       zidonghide(5, ".mmmlist", ".topbottomwrap", debounce(function () {
-        $(".topbottomwrap").fadeIn(_speed);
+        $(".topbottomwrap").stop().fadeIn(_speed);
       }, 500, true), debounce(function () {
-        $(".topbottomwrap").fadeOut(_speed);
+        $(".topbottomwrap").stop().fadeOut(_speed);
       }, 500, true), '.tianc');
       $openplayer._mflag = true;
     }
-    $musichide.fadeOut(_speed);
-    $mmlistid.fadeIn(_speed, () => {
+    $musichide.stop().fadeOut(_speed);
+    $mmlistid.stop().fadeIn(_speed, () => {
       renderMusicList()
     });
     setZindex($mmlistid);
@@ -4914,7 +4914,7 @@
     el: '.youtopwrap',
     right() {
       $youtop.removeClass('open')
-      $youtopwrap.fadeOut(_speed)
+      $youtopwrap.stop().fadeOut(_speed)
     }
   })
   // 歌词
@@ -4993,8 +4993,8 @@
     el: '.playingwrap',
     right() {
       $playingbot.html('')
-      $playingwrap.find('.playinglist').slideUp(_speed, () => {
-        $playingwrap.fadeOut(_speed)
+      $playingwrap.find('.playinglist').stop().slideUp(_speed, () => {
+        $playingwrap.stop().fadeOut(_speed)
       });
     }
   })
@@ -5002,7 +5002,7 @@
   _mySlide({
     el: '.searchlistwrap',
     right() {
-      $searchlistwrap.fadeOut(_speed)
+      $searchlistwrap.stop().fadeOut(_speed)
       $musictextid.val("");
     }
   })
@@ -5011,7 +5011,7 @@
     e.stopPropagation();
     if (!musicobj) return;
     $myVideo.attr("src", `${musicobj.murl}`);
-    $musicmv.fadeIn(_speed);
+    $musicmv.stop().fadeIn(_speed);
     videoPlay();
     setZindex($musicmv);
   });
@@ -5023,14 +5023,14 @@
     $btartist.text(musicobj.artist);
     $myAudio.attr("src", `${musicobj.url}`);
     imgjz(musicobj.pic, () => {
-      $musicimgid.find('img').attr("src", musicobj.pic).fadeIn(_speed);
+      $musicimgid.find('img').attr("src", musicobj.pic).stop().fadeIn(_speed);
       $musiclrcbg.css("background-image", `url("${musicobj.pic}")`);
       $musichide.css("background-image", `url("${musicobj.pic}")`);
       $mmlistbg.css("background-image", `url("${musicobj.pic}")`);
       $musiclrcbg.removeClass("lrcbgss");
       $mmlistbg.removeClass("lrcbgss");
     }, () => {
-      $musicimgid.find('img').attr("src", '/img/music.jpg').fadeIn(_speed);
+      $musicimgid.find('img').attr("src", '/img/music.jpg').stop().fadeIn(_speed);
       $musiclrcbg.css("background-image", `url("/img/music.jpg")`);
       $musichide.css("background-image", `url("/img/music.jpg")`);
       $mmlistbg.css("background-image", `url("/img/music.jpg")`);
@@ -5042,7 +5042,7 @@
   $youtopwrap.click(function (e) {
     if (_getTarget(e, '.youtopwrap', 1)) {
       $youtop.removeClass('open');
-      $youtopwrap.fadeOut(_speed)
+      $youtopwrap.stop().fadeOut(_speed)
     }
   })
   $dltx.click(debounce(function (e) {
@@ -5160,7 +5160,7 @@
     });
   }, 500, true))
   $userinfoclose.click(() => {
-    $userinfobox.fadeOut(_speed);
+    $userinfobox.stop().fadeOut(_speed);
   });
   $userinfologo.click((e) => {
     let str = `<div cursor class="mtcitem">上传头像</div>
@@ -5225,12 +5225,12 @@
   //关于
   $about.click(debounce(function () {
     $youtop.removeClass('open');
-    $youtopwrap.fadeOut(_speed)
+    $youtopwrap.stop().fadeOut(_speed)
     openIframe('/page/note/?v=about', 'About')
   }, 1000, true));
   $recycle.click(debounce(function () {
     $youtop.removeClass('open');
-    $youtopwrap.fadeOut(_speed)
+    $youtopwrap.stop().fadeOut(_speed)
     openIframe('/page/recycle', 'Recycle')
   }, 1000, true));
 
@@ -5308,9 +5308,9 @@
   }, 500, true))
   $logon.click(() => {
     $youtop.removeClass('open');
-    $youtopwrap.fadeOut(_speed)
+    $youtopwrap.stop().fadeOut(_speed)
     setZindex($logdata);
-    $logdata.fadeIn(_speed, () => {
+    $logdata.stop().fadeIn(_speed, () => {
       $logdata.css('display', 'flex');
       $logshowpage.val(_getData('logshowpage') || 100)
       logpage = 1
@@ -5324,7 +5324,7 @@
     logxuanran(true)
   })
   $logoff.click(() => {
-    $logdata.fadeOut(_speed, () => {
+    $logdata.stop().fadeOut(_speed, () => {
       $logdata.css('display', 'none');
       $logbot.html('');
     })
@@ -5373,7 +5373,7 @@
     $guestgo = $(".guestgo");
   // 关闭聊天框
   $guestbookoff.click(function () {
-    $guestbooklist.fadeOut(_speed, () => {
+    $guestbooklist.stop().fadeOut(_speed, () => {
       $guestbooklistconwrap.html('')
       $searchMsg.val('')
     });
@@ -5527,9 +5527,9 @@
   //查看群消息
   $guestbookclear.click(throttle(function () {
     if (_userinfo.account === 'root') {
-      $guestclear.fadeIn(_speed)
+      $guestclear.stop().fadeIn(_speed)
     } else {
-      $guestclear.fadeOut(_speed)
+      $guestclear.stop().fadeOut(_speed)
     }
     $searchMsg.val('')
     chatobj.account = 'chang'
@@ -5544,7 +5544,7 @@
         chatimgLoad();
       }
     });
-    $qmsgtx.fadeOut(_speed);
+    $qmsgtx.stop().fadeOut(_speed);
   }, 500));
   //打开聊天窗
   $guestbook.click(debounce(function () {
@@ -5552,16 +5552,16 @@
     setZindex($guestbooklist);
     if (obj.account === 'chang') {
       if (_userinfo.account === 'root') {
-        $guestclear.fadeIn(_speed)
+        $guestclear.stop().fadeIn(_speed)
       } else {
-        $guestclear.fadeOut(_speed)
+        $guestclear.stop().fadeOut(_speed)
       }
     } else {
-      $guestclear.fadeIn(_speed)
+      $guestclear.stop().fadeIn(_speed)
     }
     //隐藏主页消息提示
-    $newly.fadeOut(_speed);
-    $guestbooklist.fadeIn(_speed, () => {
+    $newly.stop().fadeOut(_speed);
+    $guestbooklist.stop().fadeIn(_speed, () => {
       //获取消息
       $searchMsg.val('')
       _getAjax('/chat/getmsg', { acc: obj.account, stu: 0 }).then(result => {
@@ -5574,17 +5574,17 @@
           //获取是否有未读私聊消息
           _getAjax("/chat/getnews", { a: 2 }).then((result) => {
             if (parseInt(result.code) === 0) {
-              $msgtx.fadeOut(_speed);
+              $msgtx.stop().fadeOut(_speed);
             } else {
-              $msgtx.fadeIn(_speed);
+              $msgtx.stop().fadeIn(_speed);
             }
           });
           //获取是否有群消息未读
           _getAjax("/chat/getnews", { a: 1 }).then((result) => {
             if (parseInt(result.code) === 0) {
-              $qmsgtx.fadeOut(_speed);
+              $qmsgtx.stop().fadeOut(_speed);
             } else {
-              $qmsgtx.fadeIn(_speed);
+              $qmsgtx.stop().fadeIn(_speed);
             }
           });
         }
@@ -5627,7 +5627,7 @@
       if (_getTarget(e, '.mtcitem')) {
         $lytitle.text(b);
         chatobj.account = a
-        $guestclear.fadeIn(_speed)
+        $guestclear.stop().fadeIn(_speed)
         $searchMsg.val('')
         _getAjax('/chat/getmsg', { acc: a, stu: 0 }).then(result => {
           if (parseInt(result.code) === 0) {
@@ -5694,13 +5694,13 @@
     });
   }).on('scroll', debounce(function () {//向上滚动获取前面聊天内容
     if ($guestbooklistcon[0].scrollHeight - $guestbooklistcon.outerHeight() - $guestbooklistcon[0].scrollTop > 100) {
-      $toMsgBottom.fadeIn(_speed)
+      $toMsgBottom.stop().fadeIn(_speed)
       if (msgtimer) {
         clearTimeout(msgtimer)
         msgtimer = null
       }
       msgtimer = setTimeout(() => {
-        $toMsgBottom.fadeOut(_speed)
+        $toMsgBottom.stop().fadeOut(_speed)
       }, 3000)
     }
     let nomore = $guestbooklistcon.find('.nomore')
@@ -5764,7 +5764,7 @@
               tt
             });
             let $msg = $guestbooklistcon.find(`#${tt}`);
-            $msg.slideUp(_speed, () => {
+            $msg.stop().slideUp(_speed, () => {
               $msg.remove()
             })
             return;
@@ -6181,7 +6181,7 @@
   // 显示好友
   $guestbooklist.click(function (e) {
     if (!_getTarget(e, '.chengyuanwrap')) {
-      $chengyuanwrap.slideUp(_speed, () => {
+      $chengyuanwrap.stop().slideUp(_speed, () => {
         $chengyuanwrap.html('');
       });
     }
@@ -6199,7 +6199,7 @@
   }
   $chengyuan.click(debounce(function (e) {
     e.stopPropagation();
-    $chengyuanwrap.slideDown(_speed, () => {
+    $chengyuanwrap.stop().slideDown(_speed, () => {
       let a = $chengyuanwrap.children()
       if (a.length === 0) {
         chengyuandefault()
@@ -6222,7 +6222,7 @@
               </ul>`;
           });
           $chengyuanwrap.html(str);
-          $msgtx.fadeOut(_speed);
+          $msgtx.stop().fadeOut(_speed);
           return;
         }
       });
@@ -6247,13 +6247,13 @@
       if (_getTarget(e, '.mtcitem')) {
         $lytitle.text(b);
         chatobj.account = a
-        $guestclear.fadeIn(_speed)
+        $guestclear.stop().fadeIn(_speed)
         $searchMsg.val('')
         _getAjax('/chat/getmsg', { acc: a, stu: 0 }).then(result => {
           if (parseInt(result.code) === 0) {
             if ($guestbooklist.is(':hidden')) return;
             rightMenu.close()
-            $chengyuanwrap.slideUp(_speed, () => {
+            $chengyuanwrap.stop().slideUp(_speed, () => {
               $chengyuanwrap.html('');
             });
             let str = sxliuyan(result.data);
@@ -6266,7 +6266,7 @@
         let url = `/page/allnote/#${a}`
         openIframe(url, b)
         rightMenu.close()
-        $chengyuanwrap.slideUp(_speed, () => {
+        $chengyuanwrap.stop().slideUp(_speed, () => {
           $chengyuanwrap.html('');
         });
       } else if (_getTarget(e, '.mtcitem2')) {
@@ -6300,11 +6300,11 @@
 
       } catch (error) {
         console.log(error);
-        $('.weatherbox').fadeOut(_speed);
+        $('.weatherbox').stop().fadeOut(_speed);
       }
     },
     error: err => {
-      $('.weatherbox').fadeOut(_speed);
+      $('.weatherbox').stop().fadeOut(_speed);
     },
   });
 
@@ -6313,7 +6313,7 @@
     let w = window.innerWidth;
     if (w === dmwidth || !_userinfo) return;
     if (dmwidth > 800 && w <= 800) {//大屏变小屏幕
-      $clock.fadeOut(_speed);//隐藏时钟
+      $clock.stop().fadeOut(_speed);//隐藏时钟
       //更改背景
       if (_userinfo.bgxs != '') {
         $bgmain.css("background-image", `url(${mediaURL}/bg/bgxs/${_userinfo.bgxs})`);
@@ -6361,7 +6361,7 @@
         musichide.isshow = false;
       }
     } else if (dmwidth <= 800 && w > 800) {//小屏变大屏
-      $clock.fadeIn(_speed);
+      $clock.stop().fadeIn(_speed);
       if (_userinfo.bg != '') {
         $bgmain.css("background-image", `url(${mediaURL}/bg/bg/${_userinfo.bg})`);
       } else {
@@ -6386,7 +6386,7 @@
         if ($myAudio[0].paused) {
           $titleid.text(mytitle)
         }
-        $usermin.text(_userinfo.username).attr("title", _userinfo.username).fadeIn(_speed);
+        $usermin.text(_userinfo.username).attr("title", _userinfo.username).stop().fadeIn(_speed);
         $dltx.css("background-image", `url(${mediaURL}/logo/${_userinfo.account}/${_userinfo.account}.png?v=${Math.random()})`);
         if (dmwidth > 800) {
           $bgmain.css("background-image", `url(${mediaURL}/bg/bg/${_userinfo.bg})`);
@@ -6427,7 +6427,7 @@
                   }
                   if ($guestbooklist.is(":hidden")) {//聊天框是隐藏
                     if (from.account !== _userinfo.account) {
-                      $newly.fadeIn(_speed);
+                      $newly.stop().fadeIn(_speed);
                     }
                   } else {
                     if ((pid.account === from.account && to !== 'chang') || (pid.account === 'chang' && to === 'chang') || (from.account === _userinfo.account && pid.account === to)) {//新消息是当前聊天框
@@ -6458,12 +6458,12 @@
                     } else {//新消息不是是当前聊天框
                       if (from.account !== _userinfo.account) {
                         if (pid.account === 'chang') {
-                          $msgtx.fadeIn(_speed);
+                          $msgtx.stop().fadeIn(_speed);
                         } else {
                           if (to === 'chang') {
-                            $qmsgtx.fadeIn(_speed);
+                            $qmsgtx.stop().fadeIn(_speed);
                           } else {
-                            $msgtx.fadeIn(_speed);
+                            $msgtx.stop().fadeIn(_speed);
                           }
                         }
                       }
@@ -6481,7 +6481,7 @@
               if (!$guestbooklist.is(":hidden")) {
                 if ((pid.account === from.account && to !== 'chang') || (pid.account === 'chang' && to === 'chang') || (from.account === _userinfo.account && pid.account === to)) {
                   let $msg = $guestbooklistcon.find(`#${tt}`);
-                  $msg.slideUp(_speed, () => {
+                  $msg.stop().slideUp(_speed, () => {
                     $msg.remove()
                   })
                 }
@@ -6599,7 +6599,7 @@
       box._url = url
       $mainid.append(box)
       let $box = $(box)
-      $box.fadeIn(_speed, () => {
+      $box.stop().fadeIn(_speed, () => {
         box.style.display = 'flex'
         setZindex($box)
       })
@@ -6635,7 +6635,7 @@
           } catch (error) { }
           _myOpen(box._url, '_blank')
         } else if (_getTarget(e, '.iframehide')) {
-          $box.fadeOut(_speed)
+          $box.stop().fadeOut(_speed)
           addHideBox(box)
         }
       }, 500, true))
@@ -6651,7 +6651,7 @@
     }
     $hideBox.on('click', 'div', function () {
       let htarget = $(this._boxflag);
-      htarget.fadeIn(_speed)
+      htarget.stop().fadeIn(_speed)
       setZindex(htarget)
       this.remove()
     }).on('contextmenu', 'div', function (e) {

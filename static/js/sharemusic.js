@@ -44,9 +44,9 @@
   if (mobj.code == 0) {
     musicobj = mobj.data
     if (musicobj.mv == "y") {
-      $mvon.show(100);
+      $mvon.stop().show(100);
     } else {
-      $mvon.hide(100);
+      $mvon.stop().hide(100);
     }
   } else {
     _setTimeout(() => {
@@ -63,7 +63,7 @@
     $title.text('ShareMusic');
     $play.attr("class", "iconfont icon-65zanting");
     $play.css("animation", "none");
-    $musicmv.fadeIn(_speed, () => {
+    $musicmv.stop().fadeIn(_speed, () => {
       $myVideo[0].src = musicobj.murl
       $myVideo[0].play()
     })
@@ -73,7 +73,7 @@
   };
   $mvoff.click(function () {
     $myVideo[0].pause();
-    $musicmv.fadeOut(_speed)
+    $musicmv.stop().fadeOut(_speed)
   })
   $mvoffxs.click(function () {
     $mvoff.click()
@@ -105,9 +105,9 @@
         })
         $myAudio._rod = rod;
         if (rod.every(item => item.fy === '')) {
-          $lrcfyon.hide(100);
+          $lrcfyon.stop().hide(100);
         } else {
-          $lrcfyon.show(100);
+          $lrcfyon.stop().show(100);
         }
         let str = '';
         rod.forEach(item => {
@@ -291,7 +291,7 @@
   $play.click(function () {
     if ($myAudio[0].paused) {
       $myVideo[0].pause();
-      $musicmv.fadeOut(_speed)
+      $musicmv.stop().fadeOut(_speed)
       $myAudio[0].play();
       $title.text(
         `\xa0\xa0\xa0♪Playing：${musicobj.artist} - ${musicobj.name}`

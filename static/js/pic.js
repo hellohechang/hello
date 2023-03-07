@@ -321,7 +321,7 @@
           "background-image": `url(${$img.attr("data-src")})`
         });
         imgjz($img.attr("data-src"), () => {
-          $img.fadeIn(_speed);
+          $img.stop().fadeIn(_speed);
         });
       }
     });

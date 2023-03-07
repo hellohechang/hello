@@ -1,7 +1,9 @@
 ~function () {
   let $totop = $('.totop'),
     $icon = $("link[rel*='icon']"),
+    $html = $(document.documentElement),
     urlparmes = queryURLParams(_myOpen()),
+    $body = $('body'),
     HASH = urlparmes.HASH;
   document.addEventListener("visibilitychange", function () {
     // 页面变为不可见时触发
@@ -14,13 +16,12 @@
     }
   });
   $totop.click(function () {
-    $box.stop().animate({
+    $html.stop().animate({
       scrollTop: 0
     }, _speed)
   })
   let $fsbg = $(".fsbg"),
     $notebotlist = $(".notebotlist"),
-    $box = $(".box"),
     $hicodeid = $('#hicode'),
     $markdown = $('.markdown'),
     $notetitle = $('.notetitle'),
@@ -72,6 +73,9 @@
         BlogDirectory()
         $notetitle.text(name)
         $notebotlist.addClass('open')
+        $html.stop().animate({
+          scrollTop: 0
+        }, _speed)
         if (HASH) {
           HASH = decodeURIComponent(HASH)
           $markdown.highlight(HASH);
@@ -123,13 +127,13 @@
         'data-flag': 'n',
         class: 'shrink iconfont icon-page-next'
       })
-      $this.parent().find('code').hide()
+      $this.parent().find('code').stop().hide()
     } else {
       $this.attr({
         'data-flag': 'y',
         class: 'shrink iconfont icon-Down'
       })
-      $this.parent().find('code').show()
+      $this.parent().find('code').stop().show()
     }
   }, 500, true))
   $pageSearch.click((e) => {
@@ -193,11 +197,11 @@
   //高亮定位
   function highlightPosition(num) {
     let DH = $(window).height(),
-      _top = _position($highlight.eq(num)[0], true).top + $box.scrollTop();
+      _top = _position($highlight.eq(num)[0], true).top + $html.scrollTop();
     $highlight.removeClass('active').eq(num).addClass('active')
-    if (_top > $box.scrollTop() && _top < $box.scrollTop() + DH) {
+    if (_top > $html.scrollTop() && _top < $html.scrollTop() + DH) {
     } else {
-      $box.stop().animate({
+      $html.stop().animate({
         scrollTop: _top - 60
       }, _speed)
     }
@@ -216,8 +220,8 @@
         {
           editlistmdobj.theme = fsbgnum
           _setData('editlistmdobj', editlistmdobj)
-          $box.removeClass("moren");
-          $box.addClass("heibaibg");
+          $body.removeClass("moren");
+          $body.addClass("heibaibg");
           $hicodeid.attr("href", "/css/notecode1.css");
           fsbgnum++;
         }
@@ -226,8 +230,8 @@
         {
           editlistmdobj.theme = fsbgnum
           _setData('editlistmdobj', editlistmdobj)
-          $box.removeClass("heibaibg");
-          $box.addClass("baiheibg");
+          $body.removeClass("heibaibg");
+          $body.addClass("baiheibg");
           $hicodeid.attr("href", "/css/notecode.css");
           fsbgnum++;
         }
@@ -236,8 +240,8 @@
         {
           editlistmdobj.theme = fsbgnum
           _setData('editlistmdobj', editlistmdobj)
-          $box.removeClass("baiheibg");
-          $box.addClass("moren");
+          $body.removeClass("baiheibg");
+          $body.addClass("moren");
           $hicodeid.attr("href", "/css/notecode2.css");
           fsbgnum = 1;
         }
@@ -271,16 +275,18 @@
     editlistmdobj.fontsz = fsztnum
     _setData('editlistmdobj', editlistmdobj)
   });
-  $box.on('scroll', function () {
-    let $this = $(this),
-      p = $this.scrollTop();
+  let hdtotop = debounce(function (p) {
     if (p <= 100) {
-      $totop.slideUp(_speed)
+      $totop.stop().slideUp(_speed)
     } else {
-      $totop.slideDown(_speed)
+      $totop.stop().slideDown(_speed)
     }
-    let H = $(window).outerHeight(),
-      CH = $this[0].scrollHeight - H;
+  }, 200)
+  window.addEventListener('scroll', function () {
+    let p = document.documentElement.scrollTop;
+    hdtotop(p)
+    let H = window.innerHeight,
+      CH = document.documentElement.scrollHeight - H;
     pagepro(p / CH)
   })
 
@@ -309,9 +315,9 @@
       $allLi.removeClass('open')
       $this.addClass('open')
       let id = $this.attr('data-id'),
-        el = $box.find(`#${id}`),
-        _top = _position(el[0], true).top + $box.scrollTop();
-      $box.stop().animate({
+        el = $html.find(`#${id}`),
+        _top = _position(el[0], true).top + $html.scrollTop();
+      $html.stop().animate({
         scrollTop: _top - 60
       }, _speed)
     }).on('click', '.navClose', function () {
@@ -342,7 +348,7 @@
         }
       }
     }
-    $box.on('scroll', debounce(hdNavActive, 200))
+    window.addEventListener('scroll', debounce(hdNavActive, 200))
   }
 }()
 

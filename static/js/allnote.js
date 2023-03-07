@@ -1,9 +1,9 @@
 ~async function () {
   let $mbg = $('.mbg'),
-    $box = $('.box'),
     $toplist = $('.toplist'),
     $searchinput = $('.toplist').find('input'),
     $menu = $('.menu'),
+    $html = $(document.documentElement),
     urlparmes = queryURLParams(_myOpen());
   $showpage = $(".showpage");
   let $icon = $("link[rel*='icon']")
@@ -40,7 +40,9 @@
       str += `<ul style="pointer-events: none;height:20px;background-color: #ffffff5c;margin:6px" class="itemBox"></ul>`
     });
     $menu.html(str)
-    $box.scrollTop(0)
+    $html.stop().animate({
+      scrollTop: 0
+    }, _speed)
   }
   function renderlist(y) {
     if (y) {
@@ -82,7 +84,9 @@
         }
         $menu.html(str)
         if (y) {
-          $box.scrollTop(0)
+          $html.stop().animate({
+            scrollTop: 0
+          }, _speed)
         }
       }
     })
@@ -119,7 +123,7 @@
         $menu.pagenum = val;
         renderlist(true)
       } else if (flag === 'gotop') {
-        $box.stop().animate({
+        $html.stop().animate({
           scrollTop: 0
         }, _speed)
       } else {
@@ -135,8 +139,8 @@
   }, 1000))
   ~function () {
     let p = 0, t = 0;
-    $box.on('scroll', throttle(function () {
-      p = $box.scrollTop()
+    window.addEventListener('scroll', throttle(function () {
+      p = document.documentElement.scrollTop
       if (p <= 200) {
         t = p
         $toplist.addClass('open')
@@ -178,7 +182,7 @@
     function makeCode(url) {
       qrcode.makeCode(encodeURI(url));
       $linkCheck.val(url);
-      $codewrap.fadeIn(_speed);
+      $codewrap.stop().fadeIn(_speed);
     }
     $linkCheck.focus(function () {
       this.select();
@@ -186,7 +190,7 @@
     $codewrap.click(function (e) {
       let $this = $(this);
       if (_getTarget(e, '.codewrap', 1)) {
-        $this.fadeOut(_speed)
+        $this.stop().fadeOut(_speed)
       }
     })
     window.makeCode = makeCode

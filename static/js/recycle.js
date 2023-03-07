@@ -1,9 +1,9 @@
 ~async function () {
   let $mbg = $('.mbg'),
-    $box = $('.box'),
     $toplist = $('.toplist'),
     $menu = $('.menu'),
     $footer = $('footer'),
+    $html = $(document.documentElement),
     $showpage = $(".showpage");
 
   _setTimeout(() => {
@@ -24,7 +24,9 @@
       str += `<ul style="pointer-events: none;height:20px;background-color: #ffffff5c;margin:6px" class="itemBox"></ul>`
     });
     $menu.html(str)
-    $box.scrollTop(0)
+    $html.stop().animate({
+      scrollTop: 0
+    }, _speed)
   }
   function renderlist(y) {
     if (y) {
@@ -71,9 +73,11 @@
           str += `</div > `;
         }
         $menu.html(str)
-        $footer.fadeOut(100)
+        $footer.stop().slideUp(_speed)
         if (y) {
-          $box.scrollTop(0)
+          $html.stop().animate({
+            scrollTop: 0
+          }, _speed)
         }
       }
     })
@@ -97,9 +101,9 @@
       $checkArr = $itemBox.filter((_, item) => $(item).find('.check').attr('check') === 'y');
     _success(`选中：${$checkArr.length}`, true)
     if ($checkArr.length > 0) {
-      $footer.fadeIn(100)
+      $footer.stop().slideDown(_speed)
     } else {
-      $footer.fadeOut(100)
+      $footer.stop().slideUp(_speed)
     }
     if ($checkArr.length === $itemBox.length) {
       $footer.find('span').attr({
@@ -131,7 +135,9 @@
         $menu.pagenum = val;
         renderlist(true)
       } else if (flag === 'gotop') {
-        $box.scrollTop(0)
+        $html.stop().animate({
+          scrollTop: 0
+        }, _speed)
       } else {
         $menu.pagenum = +flag;
         renderlist(true)
@@ -205,12 +211,12 @@
   }).on('click', '.off', function () {
     let $itemBox = $('.itemBox');
     $itemBox.find('.check').attr('check', 'n').css('background-color', 'transparent')
-    $footer.fadeOut(100)
+    $footer.stop().slideUp(_speed)
   })
   ~function () {
     let p = 0, t = 0;
-    $box.on('scroll', throttle(function () {
-      p = $box.scrollTop()
+    window.addEventListener('scroll', throttle(function () {
+      p = document.documentElement.scrollTop
       if (p <= 200) {
         t = p
         $toplist.addClass('open')

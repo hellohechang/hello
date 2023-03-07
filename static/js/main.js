@@ -597,7 +597,7 @@
   }
   //侧边导航缩放
   let checkColor = 'rgb(118 254 89 / 58%)'
-  $menuid.on("click", ".blockquote", function () {
+  $menuid.on("click", ".blockquote", debounce(function () {
     $footmenu.stop().slideUp(_speed).find('div').attr({
       class: 'iconfont icon-xuanzeweixuanze',
       check: 'n'
@@ -624,7 +624,7 @@
           </li>`;
       })
       $(".blockquote").attr('flag', 'off').next().stop().slideUp(_speed).html('');
-      $this.attr('flag', 'on').next().html(str).stop().slideDown(_speed, () => {
+      $this.attr('flag', 'on').next().html(str).slideDown(_speed, () => {
         $menuitem.stop().animate({
           scrollTop: _position($this[0]).top + $menuitem[0].scrollTop - 5
         }, _speed)
@@ -638,7 +638,7 @@
         return
       }
     })
-  }).on("click", ".sidenav-btn", function (e) {
+  }, 500, true)).on("click", ".sidenav-btn", function (e) {
     let link = $(this).attr('data-link'),
       name = $(this).attr('data-name');
     menuoff()

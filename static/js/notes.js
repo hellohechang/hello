@@ -35,9 +35,7 @@
       str += `<ul style="pointer-events: none;height:20px;background-color: #ffffff5c;margin:6px" class="itemBox"></ul>`
     });
     $menu.html(str)
-    $html.stop().animate({
-      scrollTop: 0
-    }, _speed)
+    $html.scrollTop(0)
   }
   function renderlist(y) {
     if (y) {
@@ -83,9 +81,7 @@
         $toplist._flag = false
         $footer.stop().slideUp(_speed)
         if (y) {
-          $html.stop().animate({
-            scrollTop: 0
-          }, _speed)
+          $html.scrollTop(0)
         }
       }
     })
@@ -317,11 +313,8 @@
   $showpage.on('change', function () {
     let val = $(this).val();
     _setData('nodeshowpage', val)
-    if ($menu.pagenum == 1) {
-      renderlist()
-    } else {
-      renderlist(true)
-    }
+    $menu.pagenum = 1
+    renderlist(true)
   })
   // 二维码
   ~function () {

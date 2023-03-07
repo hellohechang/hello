@@ -281,6 +281,11 @@ body {
   transition: .5s;
 }
 
+.navwrap.open {
+  transform: translateX(0);
+  opacity: 1;
+}
+
 .navwrap .navClose {
   position: absolute;
   font-size: 40px;
@@ -297,10 +302,7 @@ body {
   color: #FF9632;
 }
 
-.navwrap.open {
-  transform: translateX(0);
-  opacity: 1;
-}
+
 
 .navwrap .dirBox {
   width: 100%;

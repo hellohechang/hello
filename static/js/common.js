@@ -1287,7 +1287,7 @@ let loadingNum = [5, 22];
   function change() {
     let [x, y] = loadingNum;
     let num = null
-    load = _getData('loading') || 'y'
+    load = _getData('loading') || 6
 
     if (load === 'y') {
       num = randomNum(x, y)

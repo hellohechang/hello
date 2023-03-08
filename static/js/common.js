@@ -103,12 +103,19 @@ let LevelObj = {
 // 本地储存
 function _setData(key, data) {
   data = JSON.stringify({ data });
-  localStorage.setItem("chang" + key, encodeURIComponent(data));
+  localStorage.setItem("hello_" + key, encodeURIComponent(data));
 }
 //本地读取
 function _getData(key) {
-  let d = localStorage.getItem("chang" + key);
+  let d = localStorage.getItem("hello_" + key);
   return d && JSON.parse(decodeURIComponent(d)).data;
+}
+function _delData(key) {
+  if (key) {
+    localStorage.removeItem("hello_" + key)
+  } else {
+    localStorage.clear()
+  }
 }
 // 获取HASH
 function getBuffer(file) {
@@ -914,7 +921,7 @@ function _each(obj, callback, context) {
 function DownloadJSON(content, filename) {
   content = JSON.stringify(content);
   var eleLink = document.createElement("a");
-  eleLink.download = filename;
+  eleLink.download = filename || 'hello';
   eleLink.style.display = "none";
   var blob = new Blob([content]);
   eleLink.href = URL.createObjectURL(blob);
@@ -2207,7 +2214,9 @@ function fileLogoType(fname) {
 function downloadFile(url, fileName) {
   let a = document.createElement('a');
   a.href = url;
-  a.download = fileName;
+  if (fileName) {
+    a.download = 'hello_' + fileName;
+  }
   document.body.appendChild(a);
   a.click();
   a.remove();

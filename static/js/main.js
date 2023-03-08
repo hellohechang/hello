@@ -2251,6 +2251,7 @@
                     if (parseInt(result.code) === 0) {
                       alert(result.codeText, {
                         handled: _ => {
+                          _delData()
                           _myOpen('/page/login/')
                         }
                       });

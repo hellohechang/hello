@@ -2142,7 +2142,7 @@ document.addEventListener('mouseover', function (e) {
   let target = _getTarget(e, 'input', 1) || _getTarget(e, '#ycdiv', 1)
   if (target) {
     target.focus()
-    target.select && target.select()
+    // target.select && target.select()
   }
 })
 // 字体处理

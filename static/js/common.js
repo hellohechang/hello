@@ -1,8 +1,8 @@
 let reg = /^(https?:\/\/)([^\/#]+)/,
   sideURL = _myOpen().match(reg)[0],
   serverURL = sideURL,
-  // mediaURL = 'https://data.hellochang.eu.org';
-  mediaURL = '/getfile';
+  mediaURL = 'https://data.hellochang.eu.org';
+mediaURL = '/getfile';
 let _speed = 500;
 let LevelObj = {
   upProgressbox: 100,// 上传进度（静）

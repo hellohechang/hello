@@ -1,5 +1,5 @@
 let reg = /^(https?:\/\/)([^\/#]+)/,
-  sideURL = _myOpen().match(reg)[0],
+  sideURL = myOpen().match(reg)[0],
   serverURL = sideURL,
   mediaURL = 'https://data.hellochang.eu.org';
 mediaURL = '/getfile';
@@ -373,7 +373,7 @@ function randomColor() {
     if (window.clockMove) {
       openIframe(`/page/edit/#${obj.name}`, 'Edit')
     } else {
-      _myOpen(`/page/edit/#${obj.name}`, '_blank', 'Edit')
+      _myOpen(`/page/edit/#${obj.name}`, 'Edit')
     }
   }, 1000, true))
   copy.addEventListener('mouseenter', function () {
@@ -595,8 +595,8 @@ function _postAjax(url, data, y) {
         if (data.code == 1) {
           _err(data.codeText)
         } else if (data.code == 2) {
-          _setData('originurl', _myOpen())
-          _myOpen('/page/login/', false, 'Login');
+          _setData('originurl', myOpen())
+          myOpen('/page/login/');
           return
         }
         resolve(data);
@@ -642,8 +642,8 @@ function _getAjax(url, data, y, time) {
         if (data.code == 1) {
           _err(data.codeText)
         } else if (data.code == 2) {
-          _setData('originurl', _myOpen())
-          _myOpen('/page/login', false, 'Login');
+          _setData('originurl', myOpen())
+          myOpen('/page/login');
           return
         }
         resolve(data);
@@ -694,8 +694,8 @@ function _upFile(url, file, callback) {
         if (data.code == 1) {
           _err(data.codeText)
         } else if (data.code == 2) {
-          _setData('originurl', _myOpen())
-          _myOpen('/page/login', false, 'Login');
+          _setData('originurl', myOpen())
+          myOpen('/page/login');
           return
         }
         resolve(data)
@@ -1983,12 +1983,17 @@ function _getTarget(e, targetStr, current) {
   }
   return target;
 }
-function _myOpen(url, _blank, name) {
-  if (!_blank && !url) return window.location.href
+function _myOpen(url, name) {
+  // 在iframe中显示
   if (parent.window !== window) {
     parent.window.openIframe(url, name || url)
     return
   }
+  myOpen(url, '_blank')
+}
+
+function myOpen(url, _blank) {
+  if (!_blank && !url) return window.location.href
   let a = document.createElement("a");
   a.href = url;
   _blank && (a.target = '_blank')

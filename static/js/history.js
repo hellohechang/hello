@@ -98,10 +98,10 @@
     }).on('click', '.noteitem', debounce(function () {
         let a = $(this).parent().attr('x');
         if (isurl(a)) {
-            _myOpen(a, "_blank", a);
+            _myOpen(a, a);
         } else {
             let s = _getData("searchengine") || { searchlink: 'https://cn.bing.com/search?q=' };
-            _myOpen(`${s.searchlink}${a}`, "_blank", a);
+            _myOpen(`${s.searchlink}${a}`, a);
         }
     }, 500)).on('contextmenu', '.itemBox', function (e) {
         e.preventDefault();

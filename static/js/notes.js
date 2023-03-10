@@ -102,7 +102,7 @@
         makeCode(url)
       } else if (_getTarget(e, '.mtcitem1')) {
         rightMenu.close()
-        _myOpen(`/page/edit/#${id}`, '_blank', name)
+        _myOpen(`/page/edit/#${id}`, name)
       } else if (_getTarget(e, '.mtcitem2')) {
         alert(`确认删除：${name}？`, {
           confirm: true,
@@ -125,7 +125,7 @@
       name = $(this).parent().attr('x'),
       val = $searchinput.val().trim();
     val = encodeURIComponent(val);
-    _myOpen(`/page/note/?v=${a}${val ? "#" + val : ''}`, '_blank', name)
+    _myOpen(`/page/note/?v=${a}${val ? "#" + val : ''}`, name)
   }, 500)).on('contextmenu', '.itemBox', function (e) {
     e.preventDefault();
     $toplist.find('.pagenote').click()
@@ -199,7 +199,7 @@
   // 添加笔记
   $toplist.on('click', '.addnote', debounce(function (e) {
     e.stopPropagation()
-    _myOpen('/page/edit/#new', '_blank', 'New note')
+    _myOpen('/page/edit/#new', 'New note')
   }, 500)).on('click', '.pagenote', function (e) {
     let $itemBox = $('.itemBox');
     if ($toplist._flag) {

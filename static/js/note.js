@@ -2,7 +2,7 @@
   let $totop = $('.totop'),
     $icon = $("link[rel*='icon']"),
     $html = $(document.documentElement),
-    urlparmes = queryURLParams(_myOpen()),
+    urlparmes = queryURLParams(myOpen()),
     $body = $('body'),
     HASH = urlparmes.HASH;
   document.addEventListener("visibilitychange", function () {
@@ -38,7 +38,7 @@
     highlightnum = 0,
     $highlight = null;
   $editnote.click(debounce(function () {
-    _myOpen(`/page/edit/#${urlparmes.v}`, '_blank', 'Edit')
+    _myOpen(`/page/edit/#${urlparmes.v}`, 'Edit')
   }, 500))
   function notexuanrandefault() {
     let str = '';
@@ -109,7 +109,7 @@
         if (own === 'y') {
           url = `/page/notes/`
         }
-        _myOpen(url, '_blank', username)
+        _myOpen(url, username)
         rightMenu.close()
       } else if (_getTarget(e, '.mtcitem')) {
         imgPreview(`${mediaURL}/logo/${account}/${account}.png`)
@@ -220,8 +220,8 @@
         {
           editlistmdobj.theme = fsbgnum
           _setData('editlistmdobj', editlistmdobj)
-          $body.removeClass("moren");
-          $body.addClass("heibaibg");
+          $body.attr('class', "heibaibg");
+          $markdown.attr('class', "markdown heibaibg");
           $hicodeid.attr("href", "/css/notecode1.css");
           fsbgnum++;
         }
@@ -230,8 +230,8 @@
         {
           editlistmdobj.theme = fsbgnum
           _setData('editlistmdobj', editlistmdobj)
-          $body.removeClass("heibaibg");
-          $body.addClass("baiheibg");
+          $body.attr('class', "baiheibg");
+          $markdown.attr('class', "markdown baiheibg");
           $hicodeid.attr("href", "/css/notecode.css");
           fsbgnum++;
         }
@@ -240,8 +240,8 @@
         {
           editlistmdobj.theme = fsbgnum
           _setData('editlistmdobj', editlistmdobj)
-          $body.removeClass("baiheibg");
-          $body.addClass("moren");
+          $body.attr('class', "moren");
+          $markdown.attr('class', " markdown moren");
           $hicodeid.attr("href", "/css/notecode2.css");
           fsbgnum = 1;
         }

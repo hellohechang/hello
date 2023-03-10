@@ -229,7 +229,7 @@
         bglazyImg($allbg, '.bgitem', '.bgitemimg');
         return;
       }
-      _myOpen('/', false, 'Home')
+      document.body.innerHTML = `<p style="font-size: 20px;color: #303030;text-align:center;padding:50px 0;">${result.codeText}</p>`
     });
   }
   if (isios()) {

@@ -8,7 +8,7 @@
         $navwrap = $('.navwrap'),
         $titleinp = $title.find('input'),
         $fullScreenShow = $('.fullScreenShow'),
-        urlObj = queryURLParams(_myOpen()),
+        urlObj = queryURLParams(myOpen()),
         reg = /^hello_[0-9]+$/;
     let { HASH } = urlObj;
     // 对比记录
@@ -55,7 +55,8 @@
         $save.remove()
         $title.remove()
         HASH = `hello_${Date.now()}`
-        window.location.href = `/page/edit/#${HASH}`
+        // window.location.href = `/page/edit/#${HASH}`
+        myOpen(`/page/edit/#${HASH}`)
         // _myOpen(, false, 'Edit')
     }
     // 渲染转换显示
@@ -207,7 +208,7 @@
         }
     }).on('click', '.textname', function () {
         let name = $(this).parent().attr('data-name')
-        _myOpen(`/page/edit/#${name}`, 1, name)
+        _myOpen(`/page/edit/#${name}`, name)
     }).on('click', '.delete', function () {
         let $this = $(this),
             name = $this.parent().attr('data-name'),
@@ -231,7 +232,8 @@
                 $save.removeClass('active')
                 if (result.data) {
                     HASH = result.data.id;
-                    window.location.href = `/page/edit/#${HASH}`
+                    // window.location.href = `/page/edit/#${HASH}`
+                    myOpen(`/page/edit/#${HASH}`)
                     // _myOpen(`/page/edit/#${HASH}`, false, vn)
                     _success(result.codeText)
                     return
@@ -242,7 +244,7 @@
     }
     // 禁止后退
     function pushHistory() {
-        window.history.pushState(null, "", _myOpen());
+        window.history.pushState(null, "", myOpen());
     }
     pushHistory();
     window.addEventListener("popstate", function (e) {

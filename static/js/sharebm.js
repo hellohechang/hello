@@ -1,5 +1,5 @@
 ~async function () {
-  let urlparmes = queryURLParams(_myOpen()),
+  let urlparmes = queryURLParams(myOpen()),
     HASH = urlparmes.HASH,
     $btn=$('button'),
     $box = $('.box');
@@ -36,9 +36,7 @@
         });
       });
     } else {
-      _setTimeout(() => {
-        _myOpen('/', false, 'Home')
-      }, 5000)
+      document.body.innerHTML = `<p style="font-size: 20px;color: #303030;text-align:center;padding:50px 0;">${res.codeText}</p>`
     }
   })
   $btn.click(debounce(function(){
@@ -52,7 +50,7 @@
     let $this = $(this),
       link = $this.attr('data-link'),
       name = $this.attr('data-name');
-    _myOpen(link, "_blank", name);
+    _myOpen(link, name);
   }, 500))
   // 二维码
   ~function () {
@@ -65,6 +63,6 @@
     function makeCode(url) {
       qrcode.makeCode(encodeURI(url));
     }
-    makeCode(_myOpen())
+    makeCode(myOpen())
   }();
 }()

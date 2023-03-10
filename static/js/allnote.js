@@ -4,7 +4,7 @@
     $searchinput = $('.toplist').find('input'),
     $menu = $('.menu'),
     $html = $(document.documentElement),
-    urlparmes = queryURLParams(_myOpen());
+    urlparmes = queryURLParams(myOpen());
   $showpage = $(".showpage");
   let $icon = $("link[rel*='icon']")
   document.addEventListener("visibilitychange", async function () {

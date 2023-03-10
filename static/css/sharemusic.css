@@ -21,10 +21,10 @@ html {
 
 .box .musiclrcwrap {
   position: relative;
-  width: 100%;
-  max-width: 800px;
-  height: 100%;
-  max-height: 600px;
+  width: 90%;
+  max-width: 1200px;
+  height: 90%;
+  max-height: 1000px;
   background-color: #000;
   box-shadow: 2px 2px 10px #000;
   overflow: hidden;

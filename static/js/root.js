@@ -25,9 +25,7 @@
         $userbox.html(str);
         return
       }
-      _setTimeout(() => {
-        _myOpen('/', false, 'Home')
-      }, 2000)
+      document.body.innerHTML = `<p style="font-size: 20px;color: #303030;text-align:center;">${result.codeText}</p>`
     });
   }
   $userbox.on("click", ".deluser", function () {
@@ -87,7 +85,7 @@
         if (msg === "confirm") {
           _postAjax("/root/loginother", { a: x }).then((result) => {
             if (parseInt(result.code) === 0) {
-              _myOpen('/', false, 'Home')
+              myOpen('/', '_blank')
             }
           });
         }

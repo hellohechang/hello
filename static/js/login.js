@@ -1,7 +1,7 @@
 ~async function () {
   let $loadingBox = $('.loadingBox'),
     $body = $('body'),
-    HASH = queryURLParams(_myOpen()).HASH,
+    HASH = queryURLParams(myOpen()).HASH,
     $mbg = $('.mbg');
   let timer = null;
   // 背景
@@ -34,7 +34,7 @@
       clearInterval(timer);
       timer = null;
     }
-    _myOpen('#', false, 'Login')
+    myOpen('#')
     $('main').remove();
     let str = `<main>
       <div class="account">
@@ -88,7 +88,7 @@
             _setData("account", npd.account);
             alert(result.codeText, {
               handled: () => {
-                _myOpen(_getData('originurl') || '/', false, _getData('originurl') || '/')
+                myOpen(_getData('originurl') || '/')
               }
             })
           }
@@ -122,7 +122,7 @@
       clearInterval(timer);
       timer = null;
     }
-    _myOpen(`#resetpass`, false, 'Resetpass')
+    myOpen(`#resetpass`)
     $('main').remove();
     let str = `<main>
         <div class="password">
@@ -271,7 +271,7 @@
       clearInterval(timer);
       timer = null;
     }
-    _myOpen(`#register`, false, 'Register')
+    myOpen(`#register`)
     $('main').remove();
     let str = `<main>
       <div class="username">
@@ -349,7 +349,7 @@
             _setData('account', npd.email)
             alert(result.codeText, {
               handled: () => {
-                _myOpen(_getData('originurl') || '/', false, _getData('originurl') || '/')
+                myOpen(_getData('originurl') || '/')
               }
             })
           }
@@ -367,7 +367,7 @@
       validateImg.init(function () {
         _getAjax('/user/testaccount').then(res => {
           if (res.code == 0) {
-            _myOpen('/', false, 'Home')
+            myOpen(_getData('originurl') || '/')
           }
         })
       }, function () {
@@ -464,7 +464,7 @@
       clearInterval(timer);
       timer = null;
     }
-    _myOpen(`#changepass`, false, 'Changepass')
+    myOpen(`#changepass`)
     $('main').remove();
     let str = `<main>
         <div class="password">
@@ -529,7 +529,7 @@
       })
     }, 2000, true));
     $resetPass.click(() => {
-      _myOpen('/', false, 'Home')
+      myOpen('/')
     });
     $password2.on('blur', checkPassword);
     function checkPassword() {

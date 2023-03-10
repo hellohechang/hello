@@ -1065,7 +1065,7 @@
         });
       } else if (_getTarget(e, '.mtcitem6')) {//在新标签页打开
         rightMenu.close()
-        _myOpen(obj.link, '_blank');
+        myOpen(obj.link, '_blank');
       }
     }, 1000, true))
   }
@@ -1566,7 +1566,7 @@
         });
       } else if (_getTarget(e, '.mtcitem6')) {//在新标签页打开
         rightMenu.close()
-        _myOpen(obj.link, '_blank');
+        myOpen(obj.link, '_blank');
       }
     }, 1000, true))
   }
@@ -2237,7 +2237,7 @@
               _err('测试账号不让修改密码~')
               return;
             }
-            _myOpen('/page/login/#changepass')
+            myOpen('/page/login/#changepass')
           } else if (_getTarget(e, '.mtcitem2')) {
             if (_userinfo.account === 'test') {
               _err('测试账号不让删除账号~')
@@ -2252,7 +2252,7 @@
                       alert(result.codeText, {
                         handled: _ => {
                           _delData()
-                          _myOpen('/page/login/')
+                          myOpen('/page/login/')
                         }
                       });
                       return;
@@ -4876,7 +4876,7 @@
   }, 1000, true));
   // 监听浏览器返回事件
   function pushHistory() {
-    window.history.pushState(null, "", _myOpen());
+    window.history.pushState(null, "", myOpen());
   }
   pushHistory();
   window.addEventListener("popstate", function (e) {
@@ -5074,7 +5074,7 @@
         _getAjax("/user/signout", { all }).then((result) => {
           if (parseInt(result.code) === 0) {
             _setData('originurl', '/')
-            _myOpen('/page/login/')
+            myOpen('/page/login/')
             return
           }
         });
@@ -5687,7 +5687,6 @@
     // 检查图片是否过期
     _getAjax('/chat/isexpired', { name: b }).then(result => {
       if (parseInt(result.code) === 0) {
-        // _myOpen(mediaURL + a, "_blank");
         imgPreview(mediaURL + b, mediaURL + a)
         return;
       }
@@ -6634,7 +6633,7 @@
             let url = $box.find('iframe')[0].contentWindow.location.href
             box._url = url
           } catch (error) { }
-          _myOpen(box._url, '_blank')
+          myOpen(box._url, '_blank')
         } else if (_getTarget(e, '.iframehide')) {
           $box.stop().fadeOut(_speed)
           addHideBox(box)
@@ -6677,7 +6676,7 @@
       rightMenu.open(e, str, debounce(function (e) {
         rightMenu.close()
         if (_getTarget(e, '.mtcitem')) {
-          _myOpen(url, '_blank')
+          myOpen(url, '_blank')
         } else if (_getTarget(e, '.mtcitem1')) {
           let ht = $(htarget);
           ht.find('.iframeTitle')[0].onmousedown = null;

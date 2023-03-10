@@ -10,7 +10,7 @@
     function makeCode(url) {
       qrcode.makeCode(encodeURI(url));
     }
-    makeCode(_myOpen())
+    makeCode(myOpen())
   }();
   let dmwidth = $(document).width(),
     $box = $(".box"),
@@ -37,7 +37,7 @@
     $title = $("#title"),
     $myAudio = $('#myAudio'),
     actionLrcIndex = null,
-    urlparmes = queryURLParams(_myOpen()),
+    urlparmes = queryURLParams(myOpen()),
     HASH = urlparmes.HASH,
     musicobj = {};
   let mobj = await _getAjax('/player/musicshare', { id: HASH })
@@ -49,9 +49,7 @@
       $mvon.stop().hide(100);
     }
   } else {
-    _setTimeout(() => {
-      _myOpen('/', false, 'Home')
-    }, 5000)
+    document.body.innerHTML = `<p style="font-size: 20px;color: #303030;text-align:center;padding:50px 0;">${mobj.codeText}</p>`
     return
   }
   musicobj.pic = encodeURI(`${mediaURL}/music/${musicobj.artist}-${musicobj.name}.jpg`);
@@ -307,7 +305,7 @@
     }
   });
   $home.click(debounce(function () {
-    _myOpen("/", "_black", 'Home');
+    myOpen("/", "_black");
   }, 500));
 
   function showTitle() {

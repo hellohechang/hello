@@ -85,7 +85,7 @@
     p {
       font-size: 30px;
       text-align: center;
-      color: rgb(0, 204, 255);
+      color: #1b6eb1;
     }
 
     .pdbox {
@@ -118,39 +118,32 @@
       text.oninput = function () {
         let pd = this.value.trim();
         if (pd === '') {
-          eye.style.display = 'none'
-          pdbox.innerText = ''
-          return
+          eye.style.display = 'none';
+          pdbox.innerText = '';
+          return;
         }
-        eye.style.display = 'block'
-        pdbox.innerText = encryptPD(pd)
+        eye.style.display = 'block';
+        pdbox.innerText = encryptPD(pd);
       }
       function encryptPD(str) {
-        str = md5(str).slice(10, -10).split('').reverse().join('');
-        let sleng = str.length,
-          key = "g0oHLBmG!N$l6c#EV*riPOz?WS:wJ5MDpqFu7U9sx2n_RytAke^C4&T;3h1@a-XZQjKbv8%fYId",
+        str = md5(str).slice(10, -10);
+        let reg = /^(?![A-z0-9]+$)(?![A-z!@#$%^&*]+$)(?![0-9a-z!@#$%^&*]+$)(?![0-9A-Z!@#$%^&*]+$)([A-z0-9!@#$%^&*]{10,})$/,
+          key = "dVvfm3g!Izcq0bT@xHQ8XLt#nM2Jklu$E1hNjwi%6rseFR4^ZOCSB7p&YAPK9oD*UyG5aW",
+          sleng = str.length,
           leng = key.length,
-          arr = key.split(""),
           res = '';
-        for (let i = 0; i < sleng; i++) {
-          let uCode = str.charCodeAt(i),
-            index = (uCode + i) % leng;
-          arr.reverse()
-          res += arr[index]
-        }
-        if (!/[0-9]/.test(res)) {
-          res = '5' + res.slice(1)
-        }
-        if (!/[a-z]/.test(res)) {
-          res = res.slice(0, 1) + 'c' + res.slice(2)
-        }
-        if (!/[A-Z]/.test(res)) {
-          res = res.slice(0, 2) + 'C' + res.slice(3)
-        }
-        if (!/[^0-9a-zA-Z]/.test(res)) {
-          res = res.slice(0, 3) + '%' + res.slice(4)
-        }
-        return res
+        (function next(num) {
+          res = '';
+          let arr = key.split("")
+          for (let i = 0; i < sleng; i++) {
+            let uCode = str.charCodeAt(i),
+              index = (uCode + i + num) % leng;
+            arr.reverse();
+            res += arr[index];
+          }
+          if (!reg.test(res)) next(++num);
+        })(0);
+        return res;
       }
       pdbox.onclick = function () {
         let pd = pdbox.innerText.trim()
@@ -162,7 +155,7 @@
         let p = document.createElement('p')
         p.innerText = context
         if (!type) {
-          p.style.color = 'rgb(9, 255, 0)'
+          p.style.color = 'green'
         } else {
           p.style.color = 'red'
         }

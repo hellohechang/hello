@@ -5653,12 +5653,11 @@
     //查看文件是否过期
     _getAjax('/chat/isexpired', { name: aa }).then(result => {
       if (parseInt(result.code) === 0) {
-        let a = document.createElement("a");
-        a.href = mediaURL + aa;
-        a.target = '_blank'
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
+        if (isios()) {
+          myOpen(mediaURL + aa)
+        } else {
+          myOpen(mediaURL + aa, 'blank')
+        }
         return;
       }
       _err('文件已过期~');

@@ -10,13 +10,16 @@ const {
   _readdir,
   _mkdir,
   _unlink,
-  compressionImg,
   _success,
   _nologin,
   _nothing,
   _err,
   receiveFiles,
   mergefile,
+  readMenu,
+  isImgFile,
+  delDir,
+  _rename
 } = require('../utils');
 
 //拦截器
@@ -64,39 +67,21 @@ route.post('/updatabg', async (req, res) => {
 route.get("/getbg", async (req, res) => {
   try {
     let { flag, page, showpage = 40 } = req.query,
-      bgarr = await _readdir(`${mediaurl.filepath}/bg/${flag}`),
+      bgarr = await readMenu(`${mediaurl.filepath}/bg/${flag}`),
       pagenum = Math.ceil(bgarr.length / showpage);
     // 创建时间排序
     bgarr.sort((a, b) => {
-      a = fs.statSync(`${mediaurl.filepath}/bg/${flag}/${a}`).ctime.getTime();
-      b = fs.statSync(`${mediaurl.filepath}/bg/${flag}/${b}`).ctime.getTime();
-      return b - a;
+      return b.time - a.time;
     });
+    bgarr = bgarr.map(item => item.name)
     page > pagenum ? page = pagenum : (page <= 0 ? page = 1 : null);
     let arr = bgarr.slice(showpage * (page - 1), showpage * page);
-    // 压缩壁纸
-    let proarr = [];
-    arr.forEach(y => {
-      if (!fs.existsSync(`${mediaurl.filepath}/bgys/${flag}/${y}`)) {
-        let d = null;
-        if (flag === 'bg') {
-          d = compressionImg(`${mediaurl.filepath}/bg/${flag}/${y}`, `${mediaurl.filepath}/bgys/${flag}/${y}`, 600, 400);
-        } else {
-          d = compressionImg(`${mediaurl.filepath}/bg/${flag}/${y}`, `${mediaurl.filepath}/bgys/${flag}/${y}`, 400, 800);
-        }
-        proarr.push(d);
-      }
+    _success(res, 'ok', {
+      total: bgarr.length,
+      totalPage: pagenum,
+      pageNo: page,
+      data: arr
     });
-    Promise.all(proarr).then(() => {
-      _success(res, 'ok', {
-        total: bgarr.length,
-        totalPage: pagenum,
-        pageNo: page,
-        data: arr
-      });
-    }).catch(() => {
-      _err(res)
-    })
   } catch (error) {
     await writelog(req, `[${req._pathUrl}] ${error}`)
     _err(res)
@@ -125,11 +110,10 @@ route.post("/delbg", async (req, res) => {
 // 上传壁纸
 route.post("/up", async (req, res) => {
   try {
-    let path = `${mediaurl.filepath}/upload/${req.query.HASH}`;
+    let path = `${mediaurl.filepath}/tem/${req.query.HASH}`;
     await _mkdir(path);
     await receiveFiles(req, path, req.query.name)
     _success(res)
-    await writelog(req, `上传壁纸[${req.query.HASH}]`)
   } catch (error) {
     await writelog(req, `[${req._pathUrl}] ${error}`)
     _err(res)
@@ -139,7 +123,15 @@ route.post("/up", async (req, res) => {
 route.post('/mergefile', async (req, res) => {
   try {
     let { HASH, count, name, flag } = req.body;
-    await mergefile(count, `${mediaurl.filepath}/upload/${HASH}`, `${mediaurl.filepath}/bg/${flag}/${name}`)
+    if (!isImgFile(name)) {
+      _err(res)
+      return
+    }
+    await delDir(`${mediaurl.filepath}/bg/${flag}/${name}`)
+    await delDir(`${mediaurl.filepath}/bgys/${flag}/${name}`)
+    await _rename(`${mediaurl.filepath}/tem/${HASH}/_hello`, `${mediaurl.filepath}/bgys/${flag}/${name}`)
+    await mergefile(--count, `${mediaurl.filepath}/tem/${HASH}`, `${mediaurl.filepath}/bg/${flag}/${name}`)
+    await writelog(req, `上传壁纸[${name}]`)
     _success(res)
   } catch (error) {
     await writelog(req, `[${req._pathUrl}] ${error}`)
@@ -148,13 +140,10 @@ route.post('/mergefile', async (req, res) => {
 });
 // 断点续传
 route.post('/breakpoint', async (req, res) => {
-  let { HASH } = req.body,
-    path = `${mediaurl.filepath}/upload/${HASH}`,
-    arr = [];
   try {
-    if (fs.existsSync(path)) {
+    let { HASH } = req.body,
+      path = `${mediaurl.filepath}/tem/${HASH}`,
       arr = await _readdir(path);
-    }
     _success(res, 'ok', arr)
   } catch (error) {
     await writelog(req, `[${req._pathUrl}] ${error}`)
@@ -162,13 +151,20 @@ route.post('/breakpoint', async (req, res) => {
   }
 });
 // 检查上传文件是否重复
-route.post('/repeatfile', (req, res) => {
-  let { name, flag } = req.body;
-  if (fs.existsSync(`${mediaurl.filepath}/bg/${flag}/${name}`)) {
-    _success(res);
-    return;
+route.post('/repeatfile', async (req, res) => {
+  try {
+    let { name, flag } = req.body;
+    let u = `${mediaurl.filepath}/bg/${flag}/${name}`
+    let uys = `${mediaurl.filepath}/bgys/${flag}/${name}`
+    if (fs.existsSync(u) && fs.existsSync(uys)) {
+      _success(res);
+      return;
+    }
+    _nothing(res)
+  } catch (error) {
+    await writelog(req, `[${req._pathUrl}] ${error}`)
+    _err(res)
   }
-  _nothing(res)
 });
 
 module.exports = route;

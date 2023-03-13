@@ -17,7 +17,6 @@ const {
   _mkdir,
   extname,
   qucong,
-  compressionImg,
   _success,
   _nologin,
   _nothing,
@@ -25,6 +24,9 @@ const {
   receiveFiles,
   mergefile,
   nanoid,
+  delDir,
+  isImgFile,
+  _rename,
 } = require('../utils');
 
 //获取歌词
@@ -369,21 +371,7 @@ route.post('/addsong', async (req, res) => {
     await updateData('musicinfo', {
       data: JSON.stringify(arr)
     }, `WHERE account=?`, [account])
-    // 压缩歌曲封面
-    let pp = [];
-    musicfilearr.forEach(v => {
-      if (extname(v)[1].toLowerCase() === 'jpg') {
-        if (!fs.existsSync(`${mediaurl.filepath}/musicys/${v}`)) {
-          let d = compressionImg(`${mediaurl.filepath}/music/${v}`, `${mediaurl.filepath}/musicys/${v}`, 100, 100);
-          pp.push(d);
-        }
-      }
-    });
-    Promise.all(pp).then(() => {
-      _success(res);
-    }).catch(() => {
-      _err(res)
-    })
+    _success(res);
   } catch (error) {
     await writelog(req, `[${req._pathUrl}] ${error}`)
     _err(res)
@@ -636,7 +624,7 @@ route.post("/up", async (req, res) => {
       _err(res, '当前账号没有权限执行该操作~');
       return
     }
-    let path = `${mediaurl.filepath}/upload/${req.query.HASH}`;
+    let path = `${mediaurl.filepath}/tem/${req.query.HASH}`;
     await _mkdir(path);
     await receiveFiles(req, path, req.query.name)
     _success(res)
@@ -654,7 +642,17 @@ route.post('/mergefile', async (req, res) => {
       return
     }
     let { HASH, count, name } = req.body;
-    await mergefile(count, `${mediaurl.filepath}/upload/${HASH}`, `${mediaurl.filepath}/music/${name}`)
+    if (!/(\.JPG|\.LRC|\.MP3|\.MP4)$/ig.test(name)) {
+      _err(res)
+      return
+    }
+    await delDir(`${mediaurl.filepath}/music/${name}`)
+    await delDir(`${mediaurl.filepath}/musicys/${name}`)
+    if (isImgFile(name)) {
+      await _rename(`${mediaurl.filepath}/tem/${HASH}/_hello`, `${mediaurl.filepath}/musicys/${name}`)
+      --count
+    }
+    await mergefile(count, `${mediaurl.filepath}/tem/${HASH}`, `${mediaurl.filepath}/music/${name}`)
     _success(res)
   } catch (error) {
     await writelog(req, `[${req._pathUrl}] ${error}`)
@@ -670,11 +668,8 @@ route.post('/breakpoint', async (req, res) => {
       return
     }
     let { HASH } = req.body,
-      path = `${mediaurl.filepath}/upload/${HASH}`,
-      arr = [];
-    if (fs.existsSync(path)) {
+      path = `${mediaurl.filepath}/tem/${HASH}`,
       arr = await _readdir(path);
-    }
     _success(res, 'ok', arr)
   } catch (error) {
     await writelog(req, `[${req._pathUrl}] ${error}`)
@@ -682,18 +677,24 @@ route.post('/breakpoint', async (req, res) => {
   }
 });
 // 检查上传文件是否重复
-route.post('/repeatfile', (req, res) => {
-  let account = req._userInfo.account;
-  if (account !== 'root') {
-    _err(res, '当前账号没有权限执行该操作~');
-    return
+route.post('/repeatfile', async (req, res) => {
+  try {
+    let account = req._userInfo.account;
+    if (account !== 'root') {
+      _err(res, '当前账号没有权限执行该操作~');
+      return
+    }
+    let { name } = req.body;
+    let u = `${mediaurl.filepath}/music/${name}`
+    if (/(\.MP3|\.MP4)$/ig.test(name) && fs.existsSync(u)) {
+      _success(res)
+      return
+    }
+    _nothing(res)
+  } catch (error) {
+    await writelog(req, `[${req._pathUrl}] ${error}`)
+    _success(res, 'ok', [])
   }
-  let { name } = req.body;
-  if (fs.existsSync(`${mediaurl.filepath}/music/${name}`)) {
-    _success(res);
-    return;
-  }
-  _nothing(res)
 });
 
 module.exports = route

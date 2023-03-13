@@ -1,5 +1,4 @@
 const express = require('express'),
-  fs = require('fs'),
   { mediaurl } = require('../myconfig'),
   route = express.Router();
 
@@ -126,23 +125,12 @@ route.post('/loginother', async (req, res) => {
 // 清空upload
 route.get('/clearup', async (req, res) => {
   try {
-    let up = await _readdir(`${mediaurl.filepath}/upload`),
-      upys = await _readdir(`${mediaurl.filepath}/uploadys`);
+    let up = await _readdir(`${mediaurl.filepath}/upload`);
     up.forEach(async v => {
-      let curpath = `${mediaurl.filepath}/upload/${v}`;
-      if (fs.statSync(curpath).isDirectory()) {
-        await delDir(curpath);
-      } else {
-        await _unlink(`${mediaurl.filepath}/upload/${v}`);
-      }
-    });
-    upys.forEach(async v => {
-      let curpath = `${mediaurl.filepath}/uploadys/${v}`;
-      if (fs.statSync(curpath).isDirectory()) {
-        await delDir(curpath);
-      } else {
-        await _unlink(`${mediaurl.filepath}/uploadys/${v}`);
-      }
+      let p = `${mediaurl.filepath}/upload/${v}`;
+      let pys = `${mediaurl.filepath}/uploadys/${v}`;
+      delDir(p)
+      delDir(pys)
     });
     await writelog(req, '清空upload目录')
     _success(res, '成功清空upload目录~');
@@ -163,7 +151,6 @@ route.get("/logsearch", async (req, res) => {
     if (context) {
       arr = arr.filter(item => item.toLowerCase().includes(context.toLowerCase()))
     }
-
     let pagenum = Math.ceil(arr.length / showpage);
     page > pagenum ? page = pagenum : (page <= 0 ? page = 1 : null);
     let arr1 = arr.slice(showpage * (page - 1), showpage * page);

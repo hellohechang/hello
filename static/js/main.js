@@ -931,7 +931,7 @@
         $input.change(async (e) => {
           var file = e.target.files[0];
           $input.remove()
-          if (!/(\.JPG|\.PNG|\.GIF|\.JPEG)/ig.test(file.name)) {
+          if (!isImgFile(file.name)) {
             _err('上传文件格式错误');
             return;
           }
@@ -1429,7 +1429,7 @@
         $input.change(async (e) => {
           var file = e.target.files[0];
           $input.remove()
-          if (!/(\.JPG|\.PNG|\.GIF|\.JPEG)/ig.test(file.name)) {
+          if (!isImgFile(file.name)) {
             _err('上传文件格式错误');
             return;
           }
@@ -1843,6 +1843,96 @@
   }
 
   // 上传壁纸
+  function hdUpBg(files) {
+    ~async function fn(num) {
+      if (num >= files.length) {
+        bgpage = 1;
+        bgxuanran(true);
+        return;
+      }
+      let { name, size } = files[num];
+      let pro = new UpProgress(name)
+      if (!isImgFile(name)) {
+        pro.fail()
+        _err(`${name} 格式错误`);
+        num++;
+        fn(num);
+        return;
+      }
+      if (size == 0) {
+        pro.fail()
+        _err(`${name} 为空文件`);
+        num++;
+        fn(num);
+        return
+      }
+      try {
+        let iobj = await _imgSize(files[num]),
+          iii = iobj.width < iobj.height ? 'bgxs' : 'bg';
+        //文件切片
+        let { chunks, count, suffix, HASH } = await fileSlice(files[num], pes => {
+          pro.loading(pes)
+        })
+        // 压缩图片
+        let a = 400, b = 800;
+        if (iii == 'bg') {
+          a = 600, b = 400
+        }
+        chunks.push({
+          file: await compressionImg(files[num], a, b),
+          filename: `_hello`
+        })
+        ++count
+        let breakpointarr = (await _postAjax('/bg/breakpoint', { HASH })).data //断点续传
+        let isrepeat = await _postAjax('/bg/repeatfile', { name: `${HASH}.${suffix}`, flag: iii }); //是否已经存在文件
+
+        function compale(index) {
+          pro.update(index / count)
+        }
+
+        if (parseInt(isrepeat.code) === 0) {
+          pro.close('文件已存在')
+          //文件已经存在操作
+          num++;
+          fn(num); //多文件递归上传
+          return;
+        }
+
+        let index = breakpointarr.length
+        compale(index)
+
+        ~async function fnn(numm) {
+          if (numm >= chunks.length) {
+            let aa = await _postAjax('/bg/mergefile', { HASH, count, name: `${HASH}.${suffix}`, flag: iii }); //合并切片
+            if (parseInt(aa.code) === 0) {
+              pro.close()
+            } else {
+              pro.fail()
+            }
+            num++
+            fn(num)
+            return
+          }
+          let { filename, file } = chunks[numm];
+          if (breakpointarr.includes(filename)) {
+            numm++
+            fnn(numm)
+            return
+          }
+          _upFile(`/bg/up?name=${filename}&HASH=${HASH}`, file).finally(() => {
+            index++
+            compale(index)
+            numm++
+            fnn(numm)
+          })
+        }(0)
+      } catch (error) {
+        pro.fail()
+        num++;
+        fn(num);
+      }
+    }(0)
+  }
   $toupbg.click(function () {
     if (_userinfo.account === 'test') {
       _err('测试账号不让上传壁纸~')
@@ -1862,84 +1952,7 @@
       let files = [...e.target.files];
       $input.remove()
       if (files.length == 0) return;
-      fn(0);
-      async function fn(num) {
-        if (num >= files.length) {
-          bgpage = 1;
-          bgxuanran(true);
-          return;
-        }
-        let { name, size } = files[num];
-        let pro = new UpProgress(name)
-        if (!/(\.JPG|\.PNG|\.GIF|\.JPEG)/ig.test(name)) {
-          pro.fail()
-          _err(`${name} 格式错误`);
-          num++;
-          fn(num);
-          return;
-        }
-        try {
-          let iobj = await _imgSize(files[num]),
-            iii = iobj.width < iobj.height ? 'bgxs' : 'bg';
-          let { chunks, count, suffix, HASH } = await fileSlice(files[num], pes => {
-            pro.loading(pes)
-          }), //文件切片
-            breakpointarr = (await _postAjax('/bg/breakpoint', { HASH })).data, //断点续传
-            isrepeat = await _postAjax('/bg/repeatfile', { name: `${HASH}.${suffix}`, flag: iii }); //是否已经存在文件
-
-          function compale(index) {
-            pro.update(index / count)
-          }
-
-          if (parseInt(isrepeat.code) === 0) {
-            pro.close('妙传')
-            //文件已经存在操作
-            num++;
-            fn(num); //多文件递归上传
-            return;
-          }
-
-          let index = breakpointarr.length
-          compale(index)
-
-          fnn(0)
-          async function fnn(numm) {
-            if (numm >= chunks.length) {
-              let aa = await _postAjax('/bg/mergefile', { HASH, count, name: `${HASH}.${suffix}`, flag: iii }); //合并切片
-              if (parseInt(aa.code) === 0) {
-                pro.close()
-              } else {
-                pro.fail()
-              }
-              num++
-              fn(num)
-              return
-            }
-            let { filename, file } = chunks[numm];
-            if (breakpointarr.includes(filename)) {
-              numm++
-              fnn(numm)
-              return
-            }
-            _upFile(`/bg/up?name=${filename}&HASH=${HASH}`, file, pes => {
-              if (count === 1) {
-                pro.update(pes)
-              }
-            }).finally(() => {
-              if (count > 1) {
-                index++
-                compale(index)
-              }
-              numm++
-              fnn(numm)
-            })
-          }
-        } catch (error) {
-          pro.fail()
-          num++;
-          fn(num);
-        }
-      }
+      hdUpBg(files)
     });
   });
   ~function () {
@@ -1958,84 +1971,7 @@
       }
       var files = [...e.dataTransfer.files]
       if (files.length == 0) return;
-      fn(0);
-      async function fn(num) {
-        if (num >= files.length) {
-          bgpage = 1;
-          bgxuanran(true);
-          return;
-        }
-        let { name, size } = files[num];
-        let pro = new UpProgress(name)
-        if (!/(\.JPG|\.PNG|\.GIF|\.JPEG)/ig.test(name)) {
-          pro.fail()
-          _err(`${name} 格式错误`);
-          num++;
-          fn(num);
-          return;
-        }
-        try {
-          let iobj = await _imgSize(files[num]),
-            iii = iobj.width < iobj.height ? 'bgxs' : 'bg';
-          let { chunks, count, suffix, HASH } = await fileSlice(files[num], pes => {
-            pro.loading(pes)
-          }), //文件切片
-            breakpointarr = (await _postAjax('/bg/breakpoint', { HASH })).data, //断点续传
-            isrepeat = await _postAjax('/bg/repeatfile', { name: `${HASH}.${suffix}`, flag: iii }); //是否已经存在文件
-
-          function compale(index) {
-            pro.update(index / count)
-          }
-
-          if (parseInt(isrepeat.code) === 0) {
-            pro.close('妙传')
-            //文件已经存在操作
-            num++;
-            fn(num); //多文件递归上传
-            return;
-          }
-
-          let index = breakpointarr.length
-          compale(index)
-
-          fnn(0)
-          async function fnn(numm) {
-            if (numm >= chunks.length) {
-              let aa = await _postAjax('/bg/mergefile', { HASH, count, name: `${HASH}.${suffix}`, flag: iii }); //合并切片
-              if (parseInt(aa.code) === 0) {
-                pro.close()
-              } else {
-                pro.fail()
-              }
-              num++
-              fn(num)
-              return
-            }
-            let { filename, file } = chunks[numm];
-            if (breakpointarr.includes(filename)) {
-              numm++
-              fnn(numm)
-              return
-            }
-            _upFile(`/bg/up?name=${filename}&HASH=${HASH}`, file, pes => {
-              if (count === 1) {
-                pro.update(pes)
-              }
-            }).finally(() => {
-              if (count > 1) {
-                index++
-                compale(index)
-              }
-              numm++
-              fnn(numm)
-            })
-          }
-        } catch (error) {
-          pro.fail()
-          num++;
-          fn(num);
-        }
-      }
+      hdUpBg(files)
     });
   }();
   function bgitemmenu(e, url) {
@@ -3885,7 +3821,7 @@
      </div>
      <div class="songlisttop">
           <div cursor class="bfdq iconfont icon-65zanting"></div>
-          <div cursor class="asnum">播放全部<span>(${marr.item.length})</span></div>
+          <div class="asnum">播放全部<span>(${marr.item.length})</span></div>
           ${_userinfo.account === 'root' && ind > 1 ? `<div cursor title="Upload songs" class="addmusic"><i class="iconfont icon-shangchuan1"></i></div>` : ''}
           <div cursor title="Check" id="mmlistqx"><i class="iconfont icon-quanxuan1"></i></div>
           ${ind > 0 ? `<div data-type="${listpx}" cursor class="listps"><i class="iconfont icon-paixu"></i></div>` : ''}
@@ -4067,7 +4003,6 @@
     if (_userinfo.account !== 'root') return;
     let arr = [],
       input = document.createElement('input');
-
     input.type = 'file';
     input.multiple = 'multiple';
     input.accept = '.jpg,.mp3,.lrc,.mp4';
@@ -4079,8 +4014,7 @@
       let files = [...e.target.files];
       $input.remove()
       if (files.length == 0) return;
-      fn(0);
-      async function fn(num) {
+      ~async function fn(num) {
         if (num >= files.length) {
           _postAjax("/player/addsong", { id: listid, arr }).then((result) => {
             if (parseInt(result.code) === 0) {
@@ -4088,8 +4022,7 @@
               renderMusicList()
               return;
             }
-          }
-          );
+          });
           return;
         }
         let { name, size } = files[num];
@@ -4110,11 +4043,22 @@
         }
 
         try {
+          //文件切片
           let { chunks, count, suffix, HASH } = await fileSlice(files[num], pes => {
             pro.loading(pes)
-          }), //文件切片
-            breakpointarr = (await _postAjax('/player/breakpoint', { HASH })).data, //断点续传
-            isrepeat = await _postAjax('/player/repeatfile', { name }); //是否已经存在文件
+          })
+
+          if (isImgFile(name)) {
+            // 压缩图片
+            chunks.push({
+              file: await compressionImg(files[num], 100, 100),
+              filename: `_hello`
+            })
+            ++count
+          }
+
+          let breakpointarr = (await _postAjax('/player/breakpoint', { HASH })).data //断点续传
+          let isrepeat = await _postAjax('/player/repeatfile', { name }); //是否已经存在文件
 
           let [a, b] = extname(name);
 
@@ -4133,7 +4077,7 @@
               };
               arr.push(obj);
             }
-            pro.close('妙传')
+            pro.close('文件已存在')
             num++;
             fn(num);
             return;
@@ -4142,8 +4086,7 @@
           let index = breakpointarr.length
           compale(index)
 
-          fnn(0)
-          async function fnn(numm) {
+          ~async function fnn(numm) {
             if (numm >= chunks.length) {
               let aa = await _postAjax('/player/mergefile', { HASH, count, name }); //合并切片
               if (parseInt(aa.code) === 0) {
@@ -4170,25 +4113,19 @@
               fnn(numm)
               return
             }
-            _upFile(`/player/up?name=${filename}&HASH=${HASH}`, file, pes => {
-              if (count === 1) {
-                pro.update(pes)
-              }
-            }).finally(() => {
-              if (count > 1) {
-                index++
-                compale(index)
-              }
+            _upFile(`/player/up?name=${filename}&HASH=${HASH}`, file).finally(() => {
+              index++
+              compale(index)
               numm++
               fnn(numm)
             })
-          }
+          }(0)
         } catch (error) {
           pro.fail()
           num++;
           fn(num);
         }
-      }
+      }(0);
     });
   }).on('scroll', function () {//列表滚动
     if (this.scrollTop > 115) {
@@ -5182,7 +5119,7 @@
         $input.change(async (e) => {
           var file = e.target.files[0];
           $input.remove()
-          if (!/(\.JPG|\.PNG|\.GIF|\.JPEG)/ig.test(file.name)) {
+          if (!isImgFile(file.name)) {
             _err('上传文件格式错误');
             return;
           }
@@ -5435,7 +5372,7 @@
       str += `<li class="guestbookitemcon">`;
       str += `<span class="lyusername" style="text-align: ${!isright ? 'left' : 'right'};">${showname ? `${name}` : ''} <span style="color: #aaa;">${date[1]}</span></span>`;
       if (isrc) {
-        if (/(\.JPG|\.PNG|\.GIF|\.JPEG)$/ig.test(isrc)) {
+        if (isImgFile(isrc)) {
           str += `<div class="xfileimgwrap" style="float: ${!isright ? 'left' : 'right'};">
                     <div class="xfileimg"><span>${size}</span></div>`;
           if (isright) {
@@ -5494,7 +5431,7 @@
         isload = $v.attr("isload");
       if (isload !== "true") {
         $v.attr("isload", true);
-        let url = mediaURL + $v.parent().parent().parent().attr('data-isrc');
+        let url = (mediaURL + $v.parent().parent().parent().attr('data-isrc')).replace('upload', 'uploadys');
         imgjz(url, () => {
           $v.css('background-image', `url(${url})`);
         }, () => {
@@ -5682,11 +5619,11 @@
     openyuy(mediaURL + a, this);
   }).on("click", ".xfileimg", function (e) {//打开图片
     let a = $(this).parent().parent().parent().attr('data-isrc');
-    b = a.replace('uploadys', 'upload');
+    b = a.replace('upload', 'uploadys');
     // 检查图片是否过期
-    _getAjax('/chat/isexpired', { name: b }).then(result => {
+    _getAjax('/chat/isexpired', { name: a }).then(result => {
       if (parseInt(result.code) === 0) {
-        imgPreview(mediaURL + b, mediaURL + a)
+        imgPreview(mediaURL + a, mediaURL + b)
         return;
       }
       _err('图片已过期~');
@@ -5784,9 +5721,8 @@
         rightMenu.close()
       } else if (_getTarget(e, '.mtcitem3')) {
         let type = null;
-        if (/(\.JPG|\.PNG|\.GIF|\.JPEG)$/ig.test(y)) {
+        if (isImgFile(y)) {
           type = '图片'
-          y = y.replace('uploadys', 'upload');
         } else if (extname(y)[1] == "mp3" && s.slice(-1) == "s") {
           type = '语音'
         } else {
@@ -5978,8 +5914,7 @@
       _err('测试账号不让发送文件信息~')
       return;
     }
-    fn(0);
-    async function fn(num) {
+    ~async function fn(num) {
       if (num >= files.length) {
         return;
       }
@@ -5995,8 +5930,16 @@
       try {
         let { chunks, count, suffix, HASH } = await fileSlice(files[num], pes => {
           pro.loading(pes)
-        }),
-          breakpointarr = (await _postAjax('/chat/breakpoint', { HASH })).data, //断点续传
+        });
+        if (isImgFile(name)) {
+          // 压缩图片
+          chunks.push({
+            file: await compressionImg(files[num]),
+            filename: `_hello`
+          })
+          ++count
+        }
+        let breakpointarr = (await _postAjax('/chat/breakpoint', { HASH })).data, //断点续传
           isrepeat = await _postAjax('/chat/repeatfile', { name: `${HASH}.${suffix}` }), //是否已经存在文件
           obj = msginfo(HASH, suffix, name, files[num].size); //生成消息对象
 
@@ -6015,9 +5958,7 @@
 
         let index = breakpointarr.length
         compale(index)
-
-        fnn(0)
-        async function fnn(numm) {
+        ~async function fnn(numm){
           if (numm >= chunks.length) {
             let aa = await _postAjax('/chat/mergefile', { HASH, count, name: `${HASH}.${suffix}` }); //合并切片
             if (parseInt(aa.code) === 0) {
@@ -6037,25 +5978,19 @@
             fnn(numm)
             return
           }
-          _upFile(`/chat/up?name=${filename}&HASH=${HASH}`, file, pes => {
-            if (count === 1) {
-              pro.update(pes)
-            }
-          }).finally(() => {
-            if (count > 1) {
-              index++
-              compale(index)
-            }
+          _upFile(`/chat/up?name=${filename}&HASH=${HASH}`, file).finally(() => {
+            index++
+            compale(index)
             numm++
             fnn(numm)
           })
-        }
+        }(0)
       } catch (error) {
         pro.fail('发送失败')
         num++
         fn(num)
       }
-    }
+    }(0)
   }
   // 发送语音
   var rec;

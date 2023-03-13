@@ -3,6 +3,89 @@
     $bgshowpage = $('.bgshowpage'),
     $allbg = $('.allbg');
   // 上传壁纸
+  function hdUpFile(files){
+    ~async function fn(num){
+      if (num >= files.length) {
+        bgpage = 1;
+        bgxuanran(true);
+        return;
+      }
+      let { name, size } = files[num];
+      let pro = new UpProgress(name)
+      if (!isImgFile(name)) {
+        pro.fail()
+        _err(`${name} 格式错误`);
+        num++;
+        fn(num);
+        return;
+      }
+      if (size == 0) {
+        pro.fail()
+        _err(`${name} 为空文件`);
+        num++;
+        fn(num);
+        return
+      }
+      try {
+        //文件切片
+        let { chunks, count, suffix, HASH } = await fileSlice(files[num], pes => {
+          pro.loading(pes)
+        });
+        // 压缩图片
+        chunks.push({
+          file: await compressionImg(files[num], 500, 500),
+          filename: `_hello`
+        })
+        ++count
+        let breakpointarr = (await _postAjax('/pic/breakpoint', { HASH })).data //断点续传
+        let isrepeat = await _postAjax('/pic/repeatfile', { name: `${HASH}.${suffix}` }) //是否已经存在文件
+        function compale(index) {
+          pro.update(index / count)
+        }
+  
+        if (parseInt(isrepeat.code) === 0) {
+          pro.close('文件已存在')
+          //文件已经存在操作
+          num++;
+          fn(++num); //多文件递归上传
+          return;
+        }
+  
+        let index = breakpointarr.length
+        compale(index)
+  
+        ~async function fnn(numm){
+          if (numm >= chunks.length) {
+            let aa = await _postAjax('/pic/mergefile', { HASH, count, name: `${HASH}.${suffix}` }); //合并切片
+            if (parseInt(aa.code) === 0) {
+              pro.close()
+            } else {
+              pro.fail()
+            }
+            num++
+            fn(num)
+            return
+          }
+          let { filename, file } = chunks[numm];
+          if (breakpointarr.includes(filename)) {
+            numm++
+            fnn(numm)
+            return
+          }
+          _upFile(`/pic/up?name=${filename}&HASH=${HASH}`, file).finally(() => {
+            index++
+            compale(index)
+            numm++
+            fnn(numm)
+          })
+        }(0)
+      } catch (error) {
+        pro.fail()
+        num++;
+        fn(num);
+      }
+    }(0)
+  }
   $toupbg.click(function () {
     let input = document.createElement('input');
 
@@ -18,81 +101,7 @@
       let files = [...e.target.files];
       $input.remove()
       if (files.length == 0) return;
-      fn(0);
-      async function fn(num) {
-        if (num >= files.length) {
-          bgpage = 1;
-          bgxuanran(true);
-          return;
-        }
-        let { name, size } = files[num];
-        let pro = new UpProgress(name)
-        if (!/(\.JPG|\.PNG|\.GIF|\.JPEG)/ig.test(name)) {
-          pro.fail()
-          _err(`${name} 格式错误`);
-          num++;
-          fn(num);
-          return;
-        }
-        try {
-          let { chunks, count, suffix, HASH } = await fileSlice(files[num], pes => {
-            pro.loading(pes)
-          }), //文件切片
-            breakpointarr = (await _postAjax('/pic/breakpoint', { HASH })).data, //断点续传
-            isrepeat = await _postAjax('/pic/repeatfile', { name: `${HASH}.${suffix}` }); //是否已经存在文件
-          function compale(index) {
-            pro.update(index / count)
-          }
-
-          if (parseInt(isrepeat.code) === 0) {
-            pro.close('妙传')
-            //文件已经存在操作
-            num++;
-            fn(num); //多文件递归上传
-            return;
-          }
-
-          let index = breakpointarr.length
-          compale(index)
-
-          fnn(0)
-          async function fnn(numm) {
-            if (numm >= chunks.length) {
-              let aa = await _postAjax('/pic/mergefile', { HASH, count, name: `${HASH}.${suffix}` }); //合并切片
-              if (parseInt(aa.code) === 0) {
-                pro.close()
-              } else {
-                pro.fail()
-              }
-              num++
-              fn(num)
-              return
-            }
-            let { filename, file } = chunks[numm];
-            if (breakpointarr.includes(filename)) {
-              numm++
-              fnn(numm)
-              return
-            }
-            _upFile(`/pic/up?name=${filename}&HASH=${HASH}`, file, pes => {
-              if (count === 1) {
-                pro.update(pes)
-              }
-            }).finally(() => {
-              if (count > 1) {
-                index++
-                compale(index)
-              }
-              numm++
-              fnn(numm)
-            })
-          }
-        } catch (error) {
-          pro.fail()
-          num++;
-          fn(num);
-        }
-      }
+      hdUpFile(files)
     });
   });
   ~function () {
@@ -107,81 +116,7 @@
       e.preventDefault();
       var files = [...e.dataTransfer.files]
       if (files.length == 0) return;
-      fn(0);
-      async function fn(num) {
-        if (num >= files.length) {
-          bgpage = 1;
-          bgxuanran(true);
-          return;
-        }
-        let { name, size } = files[num];
-        let pro = new UpProgress(name)
-        if (!/(\.JPG|\.PNG|\.GIF|\.JPEG)/ig.test(name)) {
-          pro.fail()
-          _err(`${name} 格式错误`);
-          num++;
-          fn(num);
-          return;
-        }
-        try {
-          let { chunks, count, suffix, HASH } = await fileSlice(files[num], pes => {
-            pro.loading(pes)
-          }), //文件切片
-            breakpointarr = (await _postAjax('/pic/breakpoint', { HASH })).data, //断点续传
-            isrepeat = await _postAjax('/pic/repeatfile', { name: `${HASH}.${suffix}` }); //是否已经存在文件
-          function compale(index) {
-            pro.update(index / count)
-          }
-
-          if (parseInt(isrepeat.code) === 0) {
-            pro.close('妙传')
-            //文件已经存在操作
-            num++;
-            fn(num); //多文件递归上传
-            return;
-          }
-
-          let index = breakpointarr.length
-          compale(index)
-
-          fnn(0)
-          async function fnn(numm) {
-            if (numm >= chunks.length) {
-              let aa = await _postAjax('/pic/mergefile', { HASH, count, name: `${HASH}.${suffix}` }); //合并切片
-              if (parseInt(aa.code) === 0) {
-                pro.close()
-              } else {
-                pro.fail()
-              }
-              num++
-              fn(num)
-              return
-            }
-            let { filename, file } = chunks[numm];
-            if (breakpointarr.includes(filename)) {
-              numm++
-              fnn(numm)
-              return
-            }
-            _upFile(`/pic/up?name=${filename}&HASH=${HASH}`, file, pes => {
-              if (count === 1) {
-                pro.update(pes)
-              }
-            }).finally(() => {
-              if (count > 1) {
-                index++
-                compale(index)
-              }
-              numm++
-              fnn(numm)
-            })
-          }
-        } catch (error) {
-          pro.fail()
-          num++;
-          fn(num);
-        }
-      }
+      hdUpFile(files)
     });
   }();
   // 获取壁纸

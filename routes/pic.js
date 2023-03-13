@@ -7,12 +7,15 @@ const {
   _readdir,
   _mkdir,
   _unlink,
-  compressionImg,
   _success,
   _nothing,
   _err,
   receiveFiles,
   mergefile,
+  readMenu,
+  isImgFile,
+  _rename,
+  delDir
 } = require('../utils');
 
 //拦截器
@@ -28,32 +31,20 @@ route.use((req, res, next) => {
 route.get("/getlist", async (req, res) => {
   try {
     let { page, showpage = 40 } = req.query,
-      bgarr = await _readdir(`${mediaurl.filepath}/pic`),
+      bgarr = await readMenu(`${mediaurl.filepath}/pic`),
       pagenum = Math.ceil(bgarr.length / showpage);
     bgarr.sort((a, b) => {
-      a = fs.statSync(`${mediaurl.filepath}/pic/${a}`).ctime.getTime();
-      b = fs.statSync(`${mediaurl.filepath}/pic/${b}`).ctime.getTime();
-      return b - a;
+      return b.time - a.time;
     });
+    bgarr = bgarr.map(item => item.name)
     page > pagenum ? page = pagenum : (page <= 0 ? page = 1 : null);
     let arr = bgarr.slice(showpage * (page - 1), showpage * page);
-    let proarr = [];
-    arr.forEach(y => {
-      if (!fs.existsSync(`${mediaurl.filepath}/picys/${y}`)) {
-        let d = compressionImg(`${mediaurl.filepath}/pic/${y}`, `${mediaurl.filepath}/picys/${y}`, 500, 500);
-        proarr.push(d);
-      }
+    _success(res, 'ok', {
+      total: bgarr.length,
+      totalPage: pagenum,
+      pageNo: page,
+      data: arr
     });
-    Promise.all(proarr).then(() => {
-      _success(res, 'ok', {
-        total: bgarr.length,
-        totalPage: pagenum,
-        pageNo: page,
-        data: arr
-      });
-    }).catch(() => {
-      _err(res)
-    })
   } catch (error) {
     await writelog(req, `[${req._pathUrl}] ${error}`)
     _err(res)
@@ -75,7 +66,7 @@ route.post("/delpic", async (req, res) => {
 // 上传
 route.post("/up", async (req, res) => {
   try {
-    let path = `${mediaurl.filepath}/upload/${req.query.HASH}`;
+    let path = `${mediaurl.filepath}/tem/${req.query.HASH}`;
     await _mkdir(path);
     await receiveFiles(req, path, req.query.name)
     _success(res)
@@ -88,7 +79,14 @@ route.post("/up", async (req, res) => {
 route.post('/mergefile', async (req, res) => {
   try {
     let { HASH, count, name } = req.body;
-    await mergefile(count, `${mediaurl.filepath}/upload/${HASH}`, `${mediaurl.filepath}/pic/${name}`)
+    if (!isImgFile(name)) {
+      _err(res)
+      return
+    }
+    await delDir(`${mediaurl.filepath}/picys/${name}`)
+    await delDir(`${mediaurl.filepath}/pic/${name}`)
+    await _rename(`${mediaurl.filepath}/tem/${HASH}/_hello`, `${mediaurl.filepath}/picys/${name}`)
+    await mergefile(--count, `${mediaurl.filepath}/tem/${HASH}`, `${mediaurl.filepath}/pic/${name}`)
     await writelog(req, `上传图片[${name}]`)
     _success(res)
   } catch (error) {
@@ -100,11 +98,8 @@ route.post('/mergefile', async (req, res) => {
 route.post('/breakpoint', async (req, res) => {
   try {
     let { HASH } = req.body,
-      path = `${mediaurl.filepath}/upload/${HASH}`,
-      arr = [];
-    if (fs.existsSync(path)) {
+      path = `${mediaurl.filepath}/tem/${HASH}`,
       arr = await _readdir(path);
-    }
     _success(res, 'ok', arr)
   } catch (error) {
     await writelog(req, `[${req._pathUrl}] ${error}`)
@@ -112,13 +107,20 @@ route.post('/breakpoint', async (req, res) => {
   }
 });
 // 检查上传文件是否重复
-route.post('/repeatfile', (req, res) => {
-  let { name } = req.body;
-  if (fs.existsSync(`${mediaurl.filepath}/pic/${name}`)) {
-    _success(res);
-    return;
+route.post('/repeatfile', async (req, res) => {
+  try {
+    let { name } = req.body;
+    let u = `${mediaurl.filepath}/pic/${name}`
+    let uys = `${mediaurl.filepath}/picys/${name}`
+    if (fs.existsSync(u) && fs.existsSync(uys)) {
+      _success(res);
+      return;
+    }
+    _nothing(res)
+  } catch (error) {
+    await writelog(req, `[${req._pathUrl}] ${error}`)
+    _err(res)
   }
-  _nothing(res)
 });
 
 module.exports = route;

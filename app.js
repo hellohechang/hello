@@ -26,13 +26,13 @@ let { mediaurl, port, AllowOrigin } = require('./myconfig');
 let {
   writelog,
   _readdir,
-  _unlink,
   getClientIp,
   delDir,
   newDate,
   _err,
   jwtde,
-  _mkdir
+  _mkdir,
+  readMenu
 } = require('./utils')
 
 if (fs.existsSync(mediaurl.filepath)) {
@@ -52,6 +52,7 @@ if (fs.existsSync(mediaurl.filepath)) {
   _mkdir(`${mediaurl.filepath}/picys`)
   _mkdir(`${mediaurl.filepath}/logo`)
   _mkdir(`${mediaurl.filepath}/font`)
+  _mkdir(`${mediaurl.filepath}/tem`)
 } else {
   console.log(`请在myconfig.js文件中设置正确的文件存放目录`)
 }
@@ -125,30 +126,16 @@ setInterval(async () => {
   try {
     if (newDate('{3}{4}{5}') === '000000') {
       ipobj = {};
-      //删除upload超5天的文件
-      let upload = await _readdir(`${mediaurl.filepath}/upload`),
-        uploadys = await _readdir(`${mediaurl.filepath}/uploadys`);
+      //删除upload超20天的文件
+      let upload = await readMenu(`${mediaurl.filepath}/upload`);
       let now = Date.now();
       upload.forEach(async v => {
-        let curpath = `${mediaurl.filepath}/upload/${v}`;
-        let tt = fs.statSync(curpath).ctime.getTime();
-        if (now - tt >= 30 * 24 * 60 * 60 * 1000) {
-          if (fs.statSync(curpath).isDirectory()) {
-            await delDir(curpath);
-          } else {
-            await _unlink(`${mediaurl.filepath}/upload/${v}`);
-          }
-        }
-      });
-      uploadys.forEach(async v => {
-        let curpath = `${mediaurl.filepath}/uploadys/${v}`;
-        let tt = fs.statSync(curpath).ctime.getTime();
-        if (now - tt >= 30 * 24 * 60 * 60 * 1000) {
-          if (fs.statSync(curpath).isDirectory()) {
-            await delDir(curpath);
-          } else {
-            await _unlink(`${mediaurl.filepath}/uploadys/${v}`);
-          }
+        let { name, time } = v;
+        let p = `${mediaurl.filepath}/upload/${name}`;
+        let pys = `${mediaurl.filepath}/uploadys/${name}`;
+        if (now - time >= 20 * 24 * 60 * 60 * 1000) {
+          await delDir(p);
+          await delDir(pys);
         }
       });
       //每日切换壁纸
@@ -160,7 +147,7 @@ setInterval(async () => {
       updateData('user', { bg: bgarr[num] || '', bgxs: bgxsarr[xsnum] || '' }, `WHERE dailybg=? AND state=?`, ['y', '0'])
     }
   } catch (error) {
-    writelog(false, `[/app/setInterval] ${error}`)
+    await writelog(false, `[/app/setInterval] ${error}`)
   }
 }, 1000);
 function getLocahost() {

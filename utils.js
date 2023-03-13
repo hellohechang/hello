@@ -1,6 +1,6 @@
 const fs = require('fs')
 // 压缩图片
-const sharp = require('sharp');
+// const sharp = require('sharp');
 // 发送邮件
 const nodemailer = require('nodemailer');
 // token加密
@@ -53,11 +53,10 @@ function _writeFile(path, data) {
   });
 }
 function _readdir(path) {
-  if (!fs.existsSync(path)) return [];
   return new Promise((resolve, reject) => {
     fs.readdir(path, (err, result) => {
       if (err) {
-        reject(err);
+        resolve([]);
         return;
       }
       resolve(result);
@@ -65,7 +64,6 @@ function _readdir(path) {
   });
 }
 function _mkdir(path) {
-  if (fs.existsSync(path)) return;
   return new Promise((resolve, reject) => {
     fs.mkdir(path, { recursive: true }, (err, result) => {
       if (err) {
@@ -99,7 +97,30 @@ function _appendFile(path, data) {
     });
   });
 }
-
+//复制文件
+function _hdCopy(p1, p2) {
+  return new Promise((resolve, reject) => {
+    fs.cp(p1, p2, { recursive: true }, err => {
+      if (err) {
+        reject(err)
+        return
+      }
+      resolve()
+    })
+  })
+}
+// 移动文件
+function _rename(p1, p2) {
+  return new Promise((resolve, reject) => {
+    fs.rename(p1, p2, err => {
+      if (err) {
+        reject(err)
+        return
+      }
+      resolve()
+    })
+  })
+}
 // 客户端ip获取
 function getClientIp(req) {
   let ip = '';
@@ -204,21 +225,21 @@ function qucong(arr) {
   return arr;
 }
 // 压缩图片
-function compressionImg(p1, p2, x, y) {
-  return new Promise((resolve, reject) => {
-    fs.readFile(p1, (err, result) => {
-      if (err) {
-        reject(err);
-        return;
-      }
-      sharp(result)
-        .resize(x, y)
-        .toFile(p2, (err, info) => {
-          resolve(info);
-        });
-    });
-  });
-}
+// function compressionImg(p1, p2, x, y) {
+//   return new Promise((resolve, reject) => {
+//     fs.readFile(p1, (err, result) => {
+//       if (err) {
+//         reject(err);
+//         return;
+//       }
+//       sharp(result)
+//         .resize(x, y)
+//         .toFile(p2, (err, info) => {
+//           resolve(info);
+//         });
+//     });
+//   });
+// }
 //处理返回的结果
 function _send(res, options) {
   res.status(200);
@@ -252,7 +273,6 @@ function _err(res, codeText = "操作失败，请稍后再试~", data = null) {
     codeText
   });
 }
-
 function sendEmail(code, toemail) {
   return new Promise((resolve, reject) => {
     let transporter = nodemailer.createTransport({
@@ -261,7 +281,7 @@ function sendEmail(code, toemail) {
       port: 465,
       auth: {
         user: 'hellohechang@foxmail.com',
-        pass: 'xxxxxxxxxxxxxxxxxxx'
+        pass: 'x'
       }
     });
     let options = {
@@ -405,9 +425,60 @@ function bookSort(arr) {
 function getHost(url) {
   return url.match(/([^\/]{1,}\.)+([a-zA-Z]{2,})/)[0];
 }
+// 读取目录文件
+function readMenu(path) {
+  return new Promise((resolve, reject) => {
+    fs.readdir(path, (err, result) => {
+      if (err) {
+        resolve([]);
+        return;
+      }
+      let arr = [];
+      let arrp = result.map(item => {
+        return new Promise((resolve, reject) => {
+          fs.stat(`${path}/${item}`, (err, s) => {
+            if (err) {
+              resolve(s)
+              return
+            }
+            if (s.isDirectory()) {
+              obj = {
+                type: 'dir',
+                name: item,
+                time: s.ctime.getTime(),
+                size: 0
+              }
+              arr.push(obj)
+            } else {
+              obj = {
+                type: 'file',
+                name: item,
+                time: s.ctime.getTime(),
+                size: s.size
+              }
+              arr.push(obj)
+            }
+            resolve(s)
+          })
+        })
+      });
+      Promise.all(arrp).then(() => {
+        resolve(arr)
+      }).catch(err => {
+        resolve([])
+      })
+    });
+  })
+}
+function isImgFile(name) {
+  return /(\.JPG|\.PNG|\.GIF|\.JPEG)$/gi.test(name)
+}
 module.exports = {
+  _hdCopy,
+  isImgFile,
   getHost,
   bookSort,
+  readMenu,
   handleMusicList,
   arrSortMinToMax,
   writelog,
@@ -425,7 +496,6 @@ module.exports = {
   extname,
   encryption,
   qucong,
-  compressionImg,
   _send,
   _success,
   _nologin,
@@ -438,4 +508,5 @@ module.exports = {
   receiveFiles,
   mergefile,
   nanoid,
+  _rename
 }

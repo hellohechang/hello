@@ -2,7 +2,7 @@ let reg = /^(https?:\/\/)([^\/#]+)/,
   sideURL = myOpen().match(reg)[0],
   serverURL = sideURL,
   mediaURL = 'https://data.hellochang.eu.org';
-// mediaURL = '/getfile';
+mediaURL = '/getfile';
 let _speed = 500;
 let LevelObj = {
   upProgressbox: 100,// 上传进度（静）
@@ -142,7 +142,7 @@ function getBuffer(file) {
 // 大文件切片
 function fileSlice(file, callback) {
   return new Promise((resolve, reject) => {
-    let chunkSize = file.size < 50 * 1024 * 1024 ? 50 * 1024 * 1024 : 5 * 1024 * 1024,
+    let chunkSize = 3 * 1024 * 1024,
       suffix = file.name.slice(file.name.lastIndexOf('.') + 1),
       count = Math.ceil(file.size / chunkSize),
       spark = new SparkMD5.ArrayBuffer(),
@@ -1358,7 +1358,7 @@ function _imgSize(file) {
   })
 }
 // 压缩图片
-function compressionImg(file) {
+function compressionImg(file, x = 400, y = 400) {
   return new Promise((resolve, reject) => {
     let reader = new FileReader(),
       img = new Image(),
@@ -1374,19 +1374,17 @@ function compressionImg(file) {
       // 图片原始尺寸
       var originWidth = this.width;
       var originHeight = this.height;
-      // 最大尺寸限制
-      var maxWidth = 400, maxHeight = 400;
       // 目标尺寸
       var targetWidth = originWidth, targetHeight = originHeight;
       // 图片尺寸超过400x400的限制
-      if (originWidth > maxWidth || originHeight > maxHeight) {
-        if (originWidth / originHeight > maxWidth / maxHeight) {
+      if (originWidth > x || originHeight > y) {
+        if (originWidth / originHeight > x / y) {
           // 更宽，按照宽度限定尺寸
-          targetWidth = maxWidth;
-          targetHeight = Math.round(maxWidth * (originHeight / originWidth));
+          targetWidth = x;
+          targetHeight = Math.round(x * (originHeight / originWidth));
         } else {
-          targetHeight = maxHeight;
-          targetWidth = Math.round(maxHeight * (originWidth / originHeight));
+          targetHeight = y;
+          targetWidth = Math.round(y * (originWidth / originHeight));
         }
       }
 
@@ -2175,9 +2173,13 @@ document.addEventListener('mouseover', function (e) {
   window.handleFontType = handleFontType
 }()
 handleFontType()
+
+function isImgFile(name) {
+  return /(\.JPG|\.PNG|\.GIF|\.JPEG)$/gi.test(name)
+}
 // 文件logo类型
 function fileLogoType(fname) {
-  if (/(\.JPG|\.PNG|\.GIF|\.JPEG)$/gi.test(fname)) {
+  if (isImgFile(fname)) {
     return "icon-tupian";
   } else if (/(\.wmv|\.asf|\.asx|\.rm|\.rmvb|\.3gp|\.mov|\.mp4|\.m4v|\.avi|\.dat|\.mkv|\.flv|\.vob)$/gi.test(fname)) {
     return "icon-shipin1";
@@ -2282,9 +2284,6 @@ function imgPreview(u1, u2) {
   if (u2) {
     imgjz(u2, () => {
       img.src = u2
-    }, () => {
-      _err('图片加载失败~')
-      close()
     })
   }
   imgjz(u1, () => {

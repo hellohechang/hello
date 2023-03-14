@@ -96,7 +96,10 @@ body {
   overflow-y: auto;
   max-height: 300px;
   -ms-overflow-style: none;
-  user-select: none;
+  user-select: none; 
+  -webkit-user-select:none;
+  -moz-user-select:none;
+  -ms-user-select:none;
 }
 
 .hideBox div {
@@ -235,7 +238,10 @@ body {
   font-size: 14px;
   line-height: 20px;
   color: #ccc;
-  user-select: none;
+  user-select: none; 
+  -webkit-user-select:none;
+  -moz-user-select:none;
+  -ms-user-select:none;
 }
 
 .weatherbox:hover {
@@ -2097,7 +2103,10 @@ body {
   max-width: 600px;
   max-height: 800px;
   overflow: hidden;
-  user-select: none;
+  user-select: none; 
+  -webkit-user-select:none;
+  -moz-user-select:none;
+  -ms-user-select:none;
   border-radius: 5px;
   box-sizing: border-box;
   background-color: #fff;
@@ -2606,6 +2615,10 @@ body {
   line-height: 20px;
   outline: none;
   -webkit-user-select: text;
+  user-select: none; 
+  -webkit-user-select:none;
+  -moz-user-select:none;
+  -ms-user-select:none;
   border-radius: 2px;
 }
 
@@ -3086,7 +3099,10 @@ body {
   background-color: rgb(255 255 255 / 90%);
   padding: 20px 10px 20px 10px;
   box-sizing: border-box;
-  user-select: none;
+  user-select: none; 
+  -webkit-user-select:none;
+  -moz-user-select:none;
+  -ms-user-select:none;
   border-radius: 5px;
   border: 1px solid #ccc;
 }
@@ -3166,7 +3182,10 @@ body {
   height: 30px;
   left: 25px;
   bottom: 10px;
-  user-select: none;
+  user-select: none; 
+  -webkit-user-select:none;
+  -moz-user-select:none;
+  -ms-user-select:none;
 }
 
 .xzbg.open {

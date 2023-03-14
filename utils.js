@@ -8,7 +8,7 @@ const jwt = require('jsonwebtoken');
 // 接收上传文件
 const formidable = require('formidable')
 
-const { mediaurl } = require('./myconfig')
+const { mediaurl, tokenKey,emailKey } = require('./myconfig')
 
 // 记录日志
 async function writelog(req, str) {
@@ -281,7 +281,7 @@ function sendEmail(code, toemail) {
       port: 465,
       auth: {
         user: 'hellohechang@foxmail.com',
-        pass: 'x'
+        pass: emailKey
       }
     });
     let options = {
@@ -311,12 +311,12 @@ function _setTimeout(callback, time) {
 }
 // 生成token
 function jwten(account) {
-  return jwt.sign({ exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24 * 3), account }, ':^?ayXiXNp$KxZUbFxF8')
+  return jwt.sign({ exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24 * 3), account }, tokenKey)
 }
 // 解密token
 function jwtde(token) {
   try {
-    let obj = jwt.verify(token, ':^?ayXiXNp$KxZUbFxF8');
+    let obj = jwt.verify(token, tokenKey);
     return obj
   } catch (error) {
     return {}

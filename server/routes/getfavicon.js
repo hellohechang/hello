@@ -6,10 +6,6 @@ const cheerio = require('cheerio');
 const { default: axios } = require('axios');
 const { _mkdir, compressionImg, _writeFile } = require('../utils/utils');
 const configObj = require('../data/config');
-function base64ToBuffer(data) {
-  const base64 = data.replace(/^data:image\/\w+;base64,/, ''); //去掉图片base64码前面部分data:image/png;base64
-  return Buffer.from(base64, 'base64'); //把base64码转成buffer对象，
-}
 async function downFile(url, path) {
   const res = await axios({
     method: 'get',
@@ -28,10 +24,11 @@ route.get('/', async (req, res) => {
       res.sendFile(p);
       return;
     }
+    const prefix = `${u.protocol}//${u.host}`;
     await _mkdir(`${configObj.filepath}/favicon`);
     let result = await axios({
       method: 'get',
-      url: `${u.protocol}//${u.host}`,
+      url: prefix,
       timeout: 5000,
     });
     const $ = cheerio.load(result.data);
@@ -45,33 +42,28 @@ route.get('/', async (req, res) => {
         break;
       }
     }
-    if (!icon) {
-      await downFile(`${u.protocol}//${u.host}/favicon.ico`, p);
-    } else {
-      let iconUrl = icon.attribs.href;
-      if (/^data\:image/i.test(iconUrl)) {
-        const buf = base64ToBuffer(iconUrl);
-        await _writeFile(p, buf);
-      } else {
-        if (iconUrl.startsWith('//')) {
+    let iconUrl = `${prefix}/favicon.ico`;
+    if (icon) {
+      const href = icon.attribs.href;
+      if (!/^data\:image/i.test(href)) {
+        if(/^http/i.test(href)){
+          iconUrl = href;
+        }else if (/^\/\//.test(href)) {
           // '//aa.com/img/xxx.png
-          iconUrl = u.protocol + iconUrl;
-        } else if (!iconUrl.startsWith('http')) {
-          let str = `${u.protocol}//${u.host}`;
-          if (iconUrl.startsWith('/')) {
-            // '/img/xxx.png'
-            iconUrl = str + iconUrl;
-          } else if (iconUrl.startsWith('.')) {
-            // './img/xxx.png'
-            iconUrl = str + iconUrl.slice(1);
-          } else {
-            // 'img/xxx.png'
-            iconUrl = str + '/' + iconUrl;
-          }
+          iconUrl = u.protocol + href;
+        } else if (/^\//.test(href)) {
+          // '/img/xxx.png'
+          iconUrl = prefix + href;
+        } else if (/^\./.test(href)) {
+          // './img/xxx.png'
+          iconUrl = prefix + href.slice(1);
+        } else {
+          // 'img/xxx.png'
+          iconUrl = prefix + '/' + href;
         }
-        await downFile(iconUrl, p);
       }
     }
+    await downFile(iconUrl, p);
     if (fs.existsSync(p)) {
       try {
         const buf = await compressionImg(p);

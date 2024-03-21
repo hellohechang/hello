@@ -42,6 +42,7 @@ let {
     runSqlite,
   } = require('../utils/sqlite');
 const timedTask = require('../utils/timedTask');
+const codeObj = {};
 // 前端错误记录
 route.post('/panelerror', async (req, res) => {
   try {
@@ -301,7 +302,6 @@ queryData('user', 'account')
                        NOT NULL,
         flag      TEXT DEFAULT (0) 
                        NOT NULL,
-        login_key TEXT NOT NULL
                        DEFAULT (''),
         logo      TEXT NOT NULL
                        DEFAULT ('') 
@@ -396,7 +396,6 @@ END;
           password: '',
           state: '0',
           logo: '',
-          login_key: '',
         },
       ]);
 
@@ -456,7 +455,6 @@ route.post('/register', async (req, res) => {
         flag: '0',
         state: '0',
         logo: '',
-        login_key: '',
       },
     ]);
     // 生成token
@@ -469,39 +467,27 @@ route.post('/register', async (req, res) => {
   }
 });
 //登录
-route.post('/qclogin', async (req, res) => {
+route.post('/codelogin', async (req, res) => {
   try {
     const { code } = req.body;
-    if (!validaString(code, 1)) {
+    if (!validaString(code, 1, 1)) {
       paramErr(res, req);
       return;
     }
-    const [account, key] = code.split('-'),
-      userInfo = await queryData('user', '*', `WHERE account=? AND state=?`, [
-        account,
-        '0',
-      ]);
-    if (userInfo.length == 0) {
-      _err(res, '登录码已过期');
+    const key = `hello_${code}`;
+    if (!codeObj.hasOwnProperty(key)) {
+      _nothing(res);
       return;
     }
-    const [k, t] = userInfo[0].login_key.split('-'),
-      now = Date.now();
-    if (now - t > 1000 * 60 * 5 || key !== k) {
-      _err(res, '登录码已过期');
-      return;
-    }
+    const { account, username } = codeObj[key];
+    delete codeObj[key];
     setCookie(res, {
-      account: userInfo[0].account,
-      username: userInfo[0].username,
-    });
-    await updateData('user', { login_key: '' }, `WHERE account=? AND state=?`, [
       account,
-      '0',
-    ]);
+      username,
+    });
     _success(res, '登录成功', {
-      account: userInfo[0].account,
-      username: userInfo[0].username,
+      account,
+      username,
     });
   } catch (error) {
     await errLog(req, error);
@@ -561,6 +547,39 @@ route.use((req, res, next) => {
     _nologin(res);
   }
 });
+route.post('/allowcodelogin', async (req, res) => {
+  try {
+    const { code } = req.body;
+    if (!validaString(code, 1, 1)) {
+      paramErr(res, req);
+      return;
+    }
+    const key = `hello_${code}`;
+    const { account, username } = req._userInfo;
+    codeObj[key] = {
+      account,
+      username,
+    };
+    let num = 0;
+    let timer = setInterval(() => {
+      if (++num > 10) {
+        clearInterval(timer);
+        timer = null;
+        delete codeObj[key];
+        _err(res, '批准登录超时');
+        return;
+      }
+      if (!codeObj.hasOwnProperty(key)) {
+        clearInterval(timer);
+        timer = null;
+        _success(res, '批准登录成功');
+      }
+    }, 1000);
+  } catch (error) {
+    await errLog(req, error);
+    _err(res);
+  }
+});
 route.get('/updatetoken', async (req, res) => {
   try {
     const { account, username } = req._userInfo;
@@ -569,23 +588,6 @@ route.get('/updatetoken', async (req, res) => {
       username,
     });
     _success(res);
-  } catch (error) {
-    await errLog(req, error);
-    _err(res);
-  }
-});
-route.get('/qclogin', async (req, res) => {
-  try {
-    const account = req._userInfo.account,
-      t = Date.now(),
-      k = Math.random().toFixed(6).slice(2);
-    await updateData(
-      'user',
-      { login_key: `${k}-${t}` },
-      `WHERE account=? AND state=?`,
-      [account, '0']
-    );
-    _success(res, 'ok', `${account}-${k}`);
   } catch (error) {
     await errLog(req, error);
     _err(res);

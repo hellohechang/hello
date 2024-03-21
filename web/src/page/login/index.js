@@ -12,7 +12,6 @@ import {
   _postAjax,
   _getAjax,
   darkMode,
-  queryURLParams,
   wrapInput,
   _setTimeout,
 } from '../../js/utils/utils';
@@ -31,10 +30,15 @@ const $box = $('.box'),
   $repassword = $box.find('.repassword input'),
   $passwordErr = $box.find('.repassword p'),
   $showPd = $box.find('.show_pd'),
+  $nopd = $box.find('.nopd'),
+  $ratify = $('#ratify'),
   $about = $box.find('.about');
 $about.on('click', function () {
   myOpen('/note/?v=about');
 });
+if (_getData('account')) {
+  myOpen('/');
+}
 const accInp = wrapInput($account[0], {
   change(val) {
     val = val.trim();
@@ -85,33 +89,41 @@ const rePdInp = wrapInput($repassword[0], {
     $(target).parent().removeClass('focus');
   },
 });
-
-const { HASH } = queryURLParams(myOpen());
-if (HASH) {
-  $loading.stop().fadeIn();
-  _postAjax('/user/qclogin', { code: HASH })
-    .then((res) => {
-      $loading.stop().fadeOut();
-      if (res.code == 0) {
-        const { username, account } = res.data;
-        _setData('username', username);
-        _setData('uname', username);
-        _setData('account', account);
-        myOpen(_getData('originurl'));
-      }
-    })
-    .catch(() => {
-      $box.css('display', 'none');
-      _setTimeout(() => {
-        myOpen('/login');
-      }, 2000);
-      $loading.stop().fadeOut();
-    });
-} else {
-  if (_getData('account')) {
-    myOpen('/');
+let code = '';
+function hdNopdLogin() {
+  if (code) {
+    _postAjax('/user/codelogin', { code })
+      .then((res) => {
+        if (res.code == 0) {
+          const { username, account } = res.data;
+          _setData('username', username);
+          _setData('uname', username);
+          _setData('account', account);
+          myOpen(_getData('originurl'));
+          return;
+        }
+        return Promise.reject();
+      })
+      .catch((err) => {
+        _setTimeout(hdNopdLogin, 1000);
+      });
   }
 }
+$nopd.on('click', function () {
+  code = Math.random().toFixed(6).slice(2);
+  $ratify
+    .css('display', 'flex')
+    .find('.code_box')
+    .stop()
+    .fadeIn(_speed)
+    .find('.code span')
+    .text(code);
+  hdNopdLogin();
+});
+$ratify.on('click', '.close', function () {
+  $ratify.css('display', 'none').find('.code_box').css('display', 'none');
+  code = '';
+});
 window.addEventListener('load', function () {
   $box.addClass('open');
 });

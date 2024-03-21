@@ -7883,7 +7883,7 @@ function hdAccountManage(e) {
     {
       id: '2',
       text: '免密登录',
-      beforeIcon: 'iconfont icon-erweima',
+      beforeIcon: 'iconfont icon-chengyuan',
     },
     {
       id: '3',
@@ -7986,14 +7986,37 @@ function hdAccountManage(e) {
           }
         );
       } else if (id == '2') {
-        _getAjax('/user/qclogin')
-          .then(async (res) => {
-            if (res.code == 0) {
-              const code = `${getPreUrl()}/login/#${res.data}`;
-              showQcode(e, code, '登录码').catch((err) => {});
-            }
-          })
-          .catch(() => {});
+        inpMenu(
+          e,
+          {
+            items: {
+              text: {
+                beforeText: '登录码：',
+                verify(val) {
+                  if (val.trim() == '') {
+                    return '请输入登录码';
+                  }
+                },
+              },
+            },
+          },
+          debounce(
+            function ({ e, inp, close }) {
+              close();
+              const code = inp.text;
+              _postAjax('/user/allowcodelogin', { code })
+                .then((res) => {
+                  if (res.code == 0) {
+                    _msg.success(res.codeText);
+                  }
+                })
+                .catch(() => {});
+            },
+            1000,
+            true
+          ),
+          '免密登录'
+        );
       } else if (id == '5') {
         hdAdmin(e);
       }

@@ -273,7 +273,7 @@ body {
     background-color: var(--bg-color-o2);
     margin: auto;
     width: 90%;
-    max-width: 600px;
+    max-width: 500px;
     padding: 30px;
     box-sizing: border-box;
     backdrop-filter: blur(8px);
@@ -282,6 +282,7 @@ body {
     box-shadow: 0 0 5px var(--color5);
     p {
       text-align: center;
+      font-size: 18px;
     }
     .code {
       display: flex;
@@ -290,7 +291,10 @@ body {
       flex-flow: row wrap;
       span {
         font-size: 40px;
-        margin-right: 10px;
+        color: var(--text-hover-color);
+        i {
+          margin-right: 10px;
+        }
       }
     }
   }

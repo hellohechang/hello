@@ -555,6 +555,10 @@ route.post('/allowcodelogin', async (req, res) => {
       return;
     }
     const key = `hello_${code}`;
+    if (codeObj.hasOwnProperty(key)) {
+      _err(res);
+      return;
+    }
     const { account, username } = req._userInfo;
     codeObj[key] = {
       account,

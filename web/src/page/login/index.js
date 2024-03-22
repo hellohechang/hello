@@ -117,7 +117,7 @@ $nopd.on('click', function () {
     .stop()
     .fadeIn(_speed)
     .find('.code span')
-    .text(code);
+    .html(`<i>${code.slice(0, 3)}</i><i>${code.slice(3)}</i>`);
   hdNopdLogin();
 });
 $ratify.on('click', '.close', function () {

@@ -7882,7 +7882,7 @@ function hdAccountManage(e) {
     },
     {
       id: '2',
-      text: '免密登录',
+      text: '批准免密登录',
       beforeIcon: 'iconfont icon-chengyuan',
     },
     {
@@ -7993,8 +7993,11 @@ function hdAccountManage(e) {
               text: {
                 beforeText: '登录码：',
                 verify(val) {
-                  if (val.trim() == '') {
+                  val = val.trim();
+                  if (val == '') {
                     return '请输入登录码';
+                  } else if (val.length !== 6 || !isInteger(+val) || val < 0) {
+                    return '请输入6位正整数';
                   }
                 },
               },
@@ -8002,20 +8005,39 @@ function hdAccountManage(e) {
           },
           debounce(
             function ({ e, inp, close }) {
-              close();
+              if ($rightBox.isloding) {
+                _msg.info('正在认证中');
+                return;
+              }
               const code = inp.text;
-              _postAjax('/user/allowcodelogin', { code })
+              $rightBox.isloding = true;
+              let num = 0;
+              let timer = setInterval(() => {
+                _msg.botMsg(`认证中…${++num}`, 1);
+              }, 1000);
+              function closeLogin() {
+                clearInterval(timer);
+                timer = null;
+                $rightBox.isloding = false;
+                _msg.botMsg(`认证失败`, 1);
+              }
+              _postAjax('/user/allowcodelogin', { code }, { timeout: 15000 })
                 .then((res) => {
+                  closeLogin();
                   if (res.code == 0) {
+                    close();
                     _msg.success(res.codeText);
+                    _msg.botMsg(`认证成功`, 1);
                   }
                 })
-                .catch(() => {});
+                .catch(() => {
+                  closeLogin();
+                });
             },
             1000,
             true
           ),
-          '免密登录'
+          '批准免密登录'
         );
       } else if (id == '5') {
         hdAdmin(e);

@@ -166,10 +166,12 @@ if (HASH === 'new') {
           initValue(result.data);
           _setTimeout(() => {
             if (isIframe()) {
-              top.openIframe.hdTitle.updateTitle(
-                window.iframeId,
-                result.data.name
-              );
+              try {
+                window.parent.openIframe.hdTitle.updateTitle(
+                  window.iframeId,
+                  result.data.name
+                );
+              } catch (error) {}
             }
           }, 1000);
           if (temNoteObj[HASH] && temNoteObj[HASH] != result.data.data) {
@@ -549,7 +551,9 @@ function saveNote() {
         orginData.data = vt;
         orginData.name = vn;
         if (isIframe()) {
-          top.openIframe.hdTitle.updateTitle(window.iframeId, vn);
+          try {
+            window.parent.openIframe.hdTitle.updateTitle(window.iframeId, vn);
+          } catch (error) {}
         }
         $headBtns.find('.save_btn').removeClass('active');
         if (result.data) {

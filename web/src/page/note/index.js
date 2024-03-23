@@ -147,7 +147,12 @@ if (urlparmes.v) {
         titleName = name;
         _setTimeout(() => {
           if (isIframe()) {
-            top.openIframe.hdTitle.updateTitle(window.iframeId, titleName);
+            try {
+              window.parent.openIframe.hdTitle.updateTitle(
+                window.iframeId,
+                titleName
+              );
+            } catch (error) {}
           }
         }, 1000);
         $authorInfo._uobj = {

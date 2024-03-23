@@ -1071,8 +1071,10 @@ export function _offset(el) {
 export function _myOpen(url, name) {
   // 在iframe中显示
   if (isIframe()) {
-    parent.window.openIframe(url, name || url);
-    return;
+    try {
+      parent.window.openIframe(url, name || url);
+      return;
+    } catch (error) {}
   }
   myOpen(url, '_blank');
 }

@@ -5,7 +5,7 @@ import markdownItSup from 'markdown-it-sup'; // 上标
 import markdownItMark from 'markdown-it-mark'; // 高亮
 import markdownItCheckbox from 'markdown-it-task-checkbox'; // 复选框
 import imgLoadImg from '../../images/img/loadImg.png';
-import { LazyLoad, _position } from './utils';
+import { LazyLoad, _position, getIn } from './utils';
 const md = new MarkdownIt({
   linkify: true,
   html: false,
@@ -52,10 +52,11 @@ function render(el, str) {
 }
 const mdLazy = new LazyLoad();
 function highlight(el) {
-  mdLazy.bind(el.querySelectorAll('code'), (item) => {
-    let c = item.className;
-    if (/language-vue/gi.test(c)) {
-      item.className = 'hljs language-javascript';
+  mdLazy.bind(el.querySelectorAll('pre code'), (item) => {
+    const c = item.className;
+    const lang = getIn(c.match(/language-([^\s]+)/), ['1']);
+    if (!lang || !hljs.getLanguage(lang)) {
+      item.className = c.includes('hide') ? 'hide' : '';
     }
     hljs.highlightElement(item);
   });

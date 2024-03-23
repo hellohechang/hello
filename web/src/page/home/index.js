@@ -10000,10 +10000,10 @@ realtime.read((resData) => {
     }
   }
   function openIframe(url, name) {
-    if (isMobile()) {
-      myOpen(url, '_blank');
-      return;
-    }
+    // if (isMobile()) {
+    //   myOpen(url, '_blank');
+    //   return;
+    // }
     const ifra = new CreateIframe(url, name);
     openIframe.hdTitle.add(ifra.id, ifra);
     return ifra;

@@ -97,6 +97,14 @@ module.exports = merge(require('./webpack.base'), {
           from: resolve(__dirname, '..', 'src/favicon.ico'),
           to: resolve(__dirname, '../../server/static'),
         },
+        {
+          from: resolve(__dirname, '..', 'src/app.png'),
+          to: resolve(__dirname, '../../server/static'),
+        },
+        {
+          from: resolve(__dirname, '..', 'src/manifest.json'),
+          to: resolve(__dirname, '../../server/static'),
+        },
       ],
     }),
     new CleanWebpackPlugin(),

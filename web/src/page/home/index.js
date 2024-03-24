@@ -3,6 +3,7 @@ import md5 from 'md5';
 import '../../css/common/reset.css';
 import '../../css/common/animate.css';
 import '../../js/common/common.js';
+import './pwa.js';
 import '../../css/common/common.css';
 import '../../font/iconfont.css';
 import './index.less';

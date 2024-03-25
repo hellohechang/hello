@@ -31,7 +31,7 @@ import '../../js/common/common';
 import _msg from '../../js/plugins/message';
 import { UpProgress } from '../../js/plugins/UpProgress';
 import createEditer from '../../js/utils/editor';
-import { selectMenu } from '../../js/plugins/rightMenu';
+import { inpMenu, selectMenu } from '../../js/plugins/rightMenu';
 import mdo from '../../js/utils/md';
 import gqImg from '../../images/img/gqimg.png';
 const $contentWrap = $('.content_wrap'),
@@ -126,18 +126,42 @@ function initValue(obj) {
 }
 let { k } = queryURLParams(myOpen());
 if (!k || !/^[\w]+$/.test(k)) {
-  k = Math.random().toFixed(8).slice(2);
-  myOpen(`/notepad/?k=${k}`);
+  inpMenu(
+    false,
+    {
+      items: {
+        key: {
+          placeholder: '请输入笔记Key',
+          beforeText: '笔记Key：',
+          verify(val) {
+            val = val.trim();
+            if (val == '') {
+              return '请输入笔记Key';
+            } else if (!/^[\w]+$/.test(val)) {
+              return '只能包含数字、字母和下划线';
+            }
+          },
+        },
+      },
+    },
+    ({ inp }) => {
+      myOpen(`/notepad/?k=${inp.key}`);
+    },
+    0,
+    1,
+    1
+  );
+} else {
+  _getAjax('/notepad', { k })
+    .then((res) => {
+      if (res.code == 0) {
+        document.title = k;
+        initValue({ data: res.data });
+        upData();
+      }
+    })
+    .catch((err) => {});
 }
-_getAjax('/notepad', { k })
-  .then((res) => {
-    if (res.code == 0) {
-      document.title = k;
-      initValue({ data: res.data });
-      upData();
-    }
-  })
-  .catch((err) => {});
 function upData() {
   const data = editor.getValue();
   if (data === orginData.data) {
@@ -453,6 +477,36 @@ $headBtns
   })
   .on('click', '.share_btn', function (e) {
     showQcode(e, myOpen()).catch((err) => {});
+  })
+  .on('click', '.open_btn', function (e) {
+    inpMenu(
+      e,
+      {
+        items: {
+          key: {
+            placeholder: '请输入笔记Key',
+            beforeText: '笔记Key：',
+            verify(val) {
+              val = val.trim();
+              if (val == '') {
+                return '请输入笔记Key';
+              } else if (!/^[\w]+$/.test(val)) {
+                return '只能包含数字、字母和下划线';
+              }
+            },
+          },
+        },
+      },
+      debounce(
+        function ({ close, inp }) {
+          close();
+          myOpen(`/notepad/?k=${inp.key}`);
+        },
+        1000,
+        true
+      ),
+      '切换到指定笔记'
+    );
   });
 if (isIframe()) {
   $headBtns.find('.h_go_home').remove();

@@ -1741,13 +1741,13 @@ function editBm(e, obj, isHome) {
 //操作书签
 function bookMarkSetting(e, obj, isHome, el) {
   let data = [];
-  if (!isMobile()) {
+  // if (!isMobile()) {
     data.push({
       id: '1',
       text: '弹窗打开',
       beforeIcon: 'iconfont icon-24gl-minimize',
     });
-  }
+  // }
   data.push({
     id: '2',
     text: '书签图标',
@@ -2636,7 +2636,7 @@ $searchBoxMask
         beforeIcon: 'iconfont icon-tishi',
       },
     ];
-    if (!isMobile()) {
+    // if (!isMobile()) {
       data.push({
         id: '2',
         text: '弹窗打开搜索结果',
@@ -2647,7 +2647,7 @@ $searchBoxMask
             : 'iconfont icon-kaiguan-guan',
         param: { openInPop },
       });
-    }
+    // }
     selectMenu(
       e,
       data,

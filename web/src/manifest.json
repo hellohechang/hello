@@ -2,7 +2,7 @@
   "name": "Hello",
   "icons": [
     {
-      "src": "./app.png",
+      "src": "favicon.ico",
       "type": "image/png",
       "sizes": "192x192"
     }

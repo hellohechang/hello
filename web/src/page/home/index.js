@@ -9583,14 +9583,15 @@ realtime.read((resData) => {
                 if ($chatRoomWrap.is(':hidden')) return;
                 let data = result.data;
                 let str = renderMsgList(data, 1);
-                //新增内容
-                $chatListBox.find('.chat_list').append(str);
-                if (
+                const cH = $chatListBox[0].clientHeight;
+                const toBottom =
                   $chatListBox[0].scrollHeight -
                     $chatListBox[0].scrollTop -
-                    $chatListBox[0].clientHeight <
-                  500
-                ) {
+                    cH <
+                  cH;
+                //新增内容
+                $chatListBox.find('.chat_list').append(str);
+                if (toBottom) {
                   $chatListBox.stop().animate(
                     {
                       scrollTop: $chatListBox[0].scrollHeight,

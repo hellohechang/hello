@@ -20,7 +20,7 @@ hello, welcome to **Hello**
 - b：书签夹
 - f：文件管理
 - t：回收站
-- e：Web 记事本
+- e：便条
 - p：图床
 - space：播放/暂停
 - ctrl + up/down：音量调节

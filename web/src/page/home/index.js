@@ -5165,9 +5165,9 @@ document.onkeydown = function (e) {
     if (key === 'n') {
       openNote();
     }
-    // 打开记事本
+    // 打开便条
     if (key === 'e') {
-      openIframe('/notepad/', '记事本');
+      openIframe('/notepad/', '便条');
     }
     // 打开图床
     if (key === 'p') {
@@ -7818,7 +7818,7 @@ function hdTools(e) {
     { id: '2', text: '文件管理', beforeIcon: 'iconfont icon-24gl-folder' },
     { id: '3', text: '图床', beforeIcon: 'iconfont icon-tupian' },
     { id: '4', text: 'QRCode', beforeIcon: 'iconfont icon-erweima' },
-    { id: '5', text: 'Web 记事本', beforeIcon: 'iconfont icon-jilu' },
+    { id: '5', text: '便条', beforeIcon: 'iconfont icon-jilu' },
   ];
   selectMenu(
     e,
@@ -7868,7 +7868,7 @@ function hdTools(e) {
       } else if (id == '5') {
         close();
         hideRightMenu();
-        openIframe(`/notepad`, '记事本');
+        openIframe(`/notepad`, '便条');
       }
     },
     '工具'

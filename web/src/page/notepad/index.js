@@ -131,12 +131,12 @@ if (!k || !/^[\w]+$/.test(k)) {
     {
       items: {
         key: {
-          placeholder: '请输入笔记Key',
-          beforeText: '笔记Key：',
+          placeholder: '请输入便条Key',
+          beforeText: '便条Key：',
           verify(val) {
             val = val.trim();
             if (val == '') {
-              return '请输入笔记Key';
+              return '请输入便条Key';
             } else if (!/^[\w]+$/.test(val)) {
               return '只能包含数字、字母和下划线';
             }
@@ -484,12 +484,12 @@ $headBtns
       {
         items: {
           key: {
-            placeholder: '请输入笔记Key',
-            beforeText: '笔记Key：',
+            placeholder: '请输入便条Key',
+            beforeText: '便条Key：',
             verify(val) {
               val = val.trim();
               if (val == '') {
-                return '请输入笔记Key';
+                return '请输入便条Key';
               } else if (!/^[\w]+$/.test(val)) {
                 return '只能包含数字、字母和下划线';
               }
@@ -505,7 +505,7 @@ $headBtns
         1000,
         true
       ),
-      '切换到指定笔记'
+      '切换到指定便条'
     );
   });
 if (isIframe()) {

@@ -1742,11 +1742,11 @@ function editBm(e, obj, isHome) {
 function bookMarkSetting(e, obj, isHome, el) {
   let data = [];
   // if (!isMobile()) {
-    data.push({
-      id: '1',
-      text: '弹窗打开',
-      beforeIcon: 'iconfont icon-24gl-minimize',
-    });
+  data.push({
+    id: '1',
+    text: '弹窗打开',
+    beforeIcon: 'iconfont icon-24gl-minimize',
+  });
   // }
   data.push({
     id: '2',
@@ -2637,16 +2637,16 @@ $searchBoxMask
       },
     ];
     // if (!isMobile()) {
-      data.push({
-        id: '2',
-        text: '弹窗打开搜索结果',
-        beforeIcon: 'iconfont icon-24gl-minimize',
-        afterIcon:
-          openInPop === 'y'
-            ? 'iconfont icon-kaiguan-kai1'
-            : 'iconfont icon-kaiguan-guan',
-        param: { openInPop },
-      });
+    data.push({
+      id: '2',
+      text: '弹窗打开搜索结果',
+      beforeIcon: 'iconfont icon-24gl-minimize',
+      afterIcon:
+        openInPop === 'y'
+          ? 'iconfont icon-kaiguan-kai1'
+          : 'iconfont icon-kaiguan-guan',
+      param: { openInPop },
+    });
     // }
     selectMenu(
       e,
@@ -8141,22 +8141,25 @@ $rightBox
     _pop(
       {
         e,
-        text: '退出当前，还是退出所有登录设备？',
+        text: '退出当前，还是退出其他登录设备？',
         confirm: {
           text: '退出当前',
         },
         cancel: {
-          text: '退出所有',
+          text: '退出其他',
         },
       },
       (type) => {
         if (type == 'close') return;
-        let all = 'y';
-        type === 'confirm' ? (all = 'n') : null;
-        _getAjax('/user/signout', { all })
+        let other = 'y';
+        type === 'confirm' ? (other = 'n') : null;
+        _getAjax('/user/signout', { other })
           .then((result) => {
             if (parseInt(result.code) === 0) {
-              toLogin();
+              if (other === 'n') {
+                toLogin();
+              }
+              _msg.success(result.codeText);
               return;
             }
           })

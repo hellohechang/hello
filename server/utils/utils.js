@@ -56,7 +56,7 @@ async function writelog(req, str, isErr) {
     await _rename(
       hp,
       `${configObj.filepath}/log/${formatDate({
-        template: '{0}{1}{2}{3}{4}{5}',
+        template: '{0}{1}{2}_{3}{4}{5}',
       })}${isErr ? '.error' : ''}.log`
     );
   }
@@ -373,6 +373,15 @@ function _err(res, codeText = '操作失败，请稍后再试', data = null) {
   _send(res, {
     code: 1,
     codeText,
+  });
+}
+function delay(time) {
+  return new Promise((resolve) => {
+    let timer = setTimeout(() => {
+      clearTimeout(timer);
+      timer = null;
+      resolve();
+    }, time);
   });
 }
 // 定时器
@@ -1120,6 +1129,7 @@ module.exports = {
   _nothing,
   _err,
   _setTimeout,
+  delay,
   jwten,
   jwtde,
   getWordContent,

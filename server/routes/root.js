@@ -279,6 +279,7 @@ route.get('/getlog', async (req, res) => {
 route.get('/loglist', async (req, res) => {
   try {
     const list = await readMenu(`${configObj.filepath}/log`);
+    list.sort((a, b) => b.time - a.time);
     _success(res, 'ok', list);
   } catch (error) {
     await errLog(req, error);

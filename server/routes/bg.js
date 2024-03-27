@@ -1,5 +1,4 @@
 const express = require('express'),
-  fs = require('fs'),
   route = express.Router();
 const configObj = require('../data/config');
 const {
@@ -10,14 +9,12 @@ const {
 } = require('../utils/sqlite');
 const timedTask = require('../utils/timedTask');
 const {
-  _readdir,
   _mkdir,
   _success,
   _nologin,
   _nothing,
   _err,
   receiveFiles,
-  mergefile,
   isImgFile,
   getSuffix,
   randomNum,

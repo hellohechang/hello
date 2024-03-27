@@ -1,16 +1,13 @@
 const express = require('express'),
-  fs = require('fs'),
   route = express.Router();
 const configObj = require('../data/config');
 const { queryData, deleteData, insertData } = require('../utils/sqlite');
 const {
-  _readdir,
   _mkdir,
   _success,
   _nothing,
   _err,
   receiveFiles,
-  mergefile,
   isImgFile,
   _nologin,
   getSuffix,

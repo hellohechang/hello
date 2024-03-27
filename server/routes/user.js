@@ -33,6 +33,7 @@ let {
     _setTimeout,
     isImgFile,
     hdChatSendMsg,
+    delay,
   } = require('../utils/utils'),
   {
     insertData,
@@ -631,14 +632,14 @@ route.post('/changepass', async (req, res) => {
 // 退出登录
 route.get('/signout', async (req, res) => {
   try {
-    let account = req._userInfo.account,
-      { all } = req.query;
-    if (!validationValue(all, ['y', 'n'])) {
+    let { account, username } = req._userInfo,
+      { other } = req.query;
+    if (!validationValue(other, ['y', 'n'])) {
       paramErr(res, req);
       return;
     }
-    if (all === 'y') {
-      //退出所有登录设备
+    if (other === 'y') {
+      //退出其他登录设备
       await updateData(
         'user',
         {
@@ -647,8 +648,14 @@ route.get('/signout', async (req, res) => {
         `WHERE account=? AND state=?`,
         [account, '0']
       );
+      await delay(1100);
+      setCookie(res, {
+        account,
+        username,
+      });
+    } else if (other === 'n') {
+      res.clearCookie('token');
     }
-    res.clearCookie('token');
     _success(res, '退出登录成功');
   } catch (error) {
     await errLog(req, error);

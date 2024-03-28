@@ -7521,7 +7521,7 @@ function settingMenu(e, isMain) {
       param: { value: dark },
     },
   ];
-  if (isMain && !isMobile()) {
+  if (isMain) {
     data = [
       ...data,
       {

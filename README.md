@@ -2,7 +2,7 @@
 mkdir -p /home/node/hello
 ```
 ```
-git clone https://github.com/hellohechang/hello.git /home/node/hello
+git clone https://github.com/rszwn/hello.git /home/node/hello
 ```
 ```
 cd /home/node/hello/server
